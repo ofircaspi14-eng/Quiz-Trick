@@ -235,6 +235,12 @@ body{
   font-family:'Heebo',Arial,sans-serif;transition:transform .15s,box-shadow .15s;
 }
 .btn-ctrl:hover{transform:scale(1.04)}
+.btn-show{
+  background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;
+  box-shadow:0 4px 16px rgba(21,101,192,.4);
+  font-size:1.15rem;padding:16px 40px;
+  animation:popIn .4s ease;
+}
 .btn-end{background:linear-gradient(135deg,#ff5252,#d32f2f);color:#fff;box-shadow:0 3px 12px rgba(255,82,82,.35)}
 .btn-skip{background:#f0f0f0;color:#888;border:1px solid #ddd}
 .btn-skip:hover{background:#e0e0e0;border-color:#bbb}
@@ -250,6 +256,16 @@ body{
   box-shadow:0 3px 12px rgba(156,39,176,.4);
   display:none;font-size:1.05rem;padding:14px 36px;
 }
+
+/* preview banner */
+.preview-banner{
+  background:linear-gradient(135deg,#fff3e0,#ffe0b2);
+  border:2px solid #ffb74d;border-radius:14px;
+  padding:14px 20px;margin-bottom:14px;
+  display:none;text-align:center;
+  font-size:.95rem;font-weight:700;color:#e65100;
+}
+.preview-banner.show{display:block}
 
 /* leaderboard panel */
 .lb-panel{
@@ -397,10 +413,16 @@ body{
       <!-- Answers -->
       <div class="ans-grid" id="ans-grid"></div>
 
+      <!-- Preview banner -->
+      <div class="preview-banner" id="preview-banner">
+        👁️ תצוגה מקדימה – החניכים רואים מסך המתנה. לחץ "הצג שאלה" כדי להתחיל את הטיימר.
+      </div>
+
       <!-- Control buttons -->
       <div class="ctrl-btns">
-        <button class="btn-ctrl btn-skip" id="btn-skip" onclick="skipQuestion()">⏭ דלג</button>
-        <button class="btn-ctrl btn-end" id="btn-end-q" onclick="endQuestion()">⏹ סגור שאלה</button>
+        <button class="btn-ctrl btn-show" id="btn-show-q" onclick="showQuestionToPlayers()">▶ הצג שאלה לחניכים</button>
+        <button class="btn-ctrl btn-skip" id="btn-skip" onclick="skipQuestion()" style="display:none">⏭ דלג</button>
+        <button class="btn-ctrl btn-end" id="btn-end-q" onclick="endQuestion()" style="display:none">⏹ סגור שאלה</button>
         <button class="btn-ctrl btn-next" id="btn-next-q" onclick="nextQuestion()">▶ שאלה הבאה</button>
         <button class="btn-ctrl btn-finish" id="btn-finish-game" onclick="finishGame()">🏆 סיים בוחן</button>
       </div>
@@ -591,42 +613,72 @@ function startGame() {
   showQuestion();
 }
 
+/* Load question in PREVIEW mode – admin sees it, players wait */
 function showQuestion() {
-  gameState='question_active';
+  gameState='question_preview';
   const q=QUESTIONS[currentQ];
 
   document.getElementById('q-ctrl-label').textContent=`${currentQ+1} / ${QUESTIONS.length}`;
   document.getElementById('q-box-num').textContent=`שאלה ${currentQ+1}`;
   document.getElementById('q-box-text').textContent=q.q;
-  document.getElementById('q-status-label').textContent='פעיל ⏳';
-  document.getElementById('q-status-label').style.color='#1565c0';
+  document.getElementById('q-status-label').textContent='תצוגה מקדימה 👁';
+  document.getElementById('q-status-label').style.color='#ff6f00';
   document.getElementById('lb-section').style.display='none';
-  document.getElementById('btn-end-q').style.display='inline-block';
-  document.getElementById('btn-skip').style.display='inline-block';
+  document.getElementById('preview-banner').className='preview-banner show';
+
+  // Show/hide buttons for preview state
+  document.getElementById('btn-show-q').style.display='inline-block';
+  document.getElementById('btn-skip').style.display='none';
+  document.getElementById('btn-end-q').style.display='none';
   document.getElementById('btn-next-q').style.display='none';
   document.getElementById('btn-finish-game').style.display='none';
 
-  // Build answer cards with vote bars
+  // Reset timer display (not counting yet)
+  const tel=document.getElementById('ctrl-timer');
+  tel.textContent=timePerQ; tel.className='timer-number';
+  const bar=document.getElementById('ctrl-timer-bar');
+  bar.style.animation='none'; void bar.offsetHeight;
+  bar.style.width='100%';
+
+  // Build answer cards (no vote bars yet)
   const grid=document.getElementById('ans-grid');
   grid.innerHTML='';
   q.answers.forEach((ans,i)=>{
     const div=document.createElement('div');
     div.className=`ans-card ${ANS_CLS[i]}`;
+    div.style.opacity='.75';
     div.innerHTML=`
       <div class="ans-ltr">${LETTERS[i]}</div>
       <span class="ans-text-content">${ans}</span>
       <span class="ans-vote-count" id="vcnt-${i}"></span>
       <div class="ans-vote-bar" id="vbar-${i}" style="width:0%"></div>`;
-    if(i===q.correct) div.dataset.correct='1';
     grid.appendChild(div);
   });
   refreshResponseCounts();
+  refreshQuestionListHighlight();
 
-  // Timer
+  // Tell players to show waiting screen
+  ch.postMessage({type:'QUESTION_PREVIEW', qi:currentQ});
+}
+
+/* Admin clicks "הצג שאלה לחניכים" – timer starts, players see question */
+function showQuestionToPlayers() {
+  gameState='question_active';
+
+  document.getElementById('preview-banner').className='preview-banner';
+  document.getElementById('btn-show-q').style.display='none';
+  document.getElementById('btn-skip').style.display='inline-block';
+  document.getElementById('btn-end-q').style.display='inline-block';
+  document.getElementById('q-status-label').textContent='פעיל ⏳';
+  document.getElementById('q-status-label').style.color='#1565c0';
+
+  // Make answer cards fully visible
+  document.querySelectorAll('.ans-card').forEach(c=>c.style.opacity='1');
+
+  // Start timer
   timeLeft=timePerQ;
   const tel=document.getElementById('ctrl-timer');
   tel.textContent=timePerQ; tel.className='timer-number';
-
   const bar=document.getElementById('ctrl-timer-bar');
   bar.style.animation='none'; void bar.offsetHeight;
   bar.style.animationDuration=timePerQ+'s';
@@ -640,7 +692,7 @@ function showQuestion() {
     if(timeLeft<=0){ clearInterval(timerInt); endQuestion(); }
   },1000);
 
-  refreshQuestionListHighlight();
+  // NOW broadcast to players
   ch.postMessage({type:'QUESTION_START', qi:currentQ, timePerQ});
 }
 
