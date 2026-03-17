@@ -122,6 +122,23 @@ body{font-family:'Heebo',Arial,sans-serif;background:linear-gradient(135deg,#f0f
 .final-title{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
 .btn-new{background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;box-shadow:0 4px 16px rgba(21,101,192,.4);margin:0 auto}
 
+/* ============================================================ STICKER POPUP */
+#sticker-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.sticker-popup{display:none;text-align:center;transform:rotate(-4deg) scale(0);animation:stickerIn .45s cubic-bezier(.34,1.56,.64,1) forwards;filter:drop-shadow(0 8px 24px rgba(0,0,0,.45));}
+.sticker-popup.show{display:block}
+@keyframes stickerIn{0%{transform:rotate(-4deg) scale(0);opacity:0}60%{transform:rotate(-2deg) scale(1.12);opacity:1}100%{transform:rotate(-3deg) scale(1);opacity:1}}
+@keyframes stickerOut{0%{transform:rotate(-3deg) scale(1);opacity:1}100%{transform:rotate(-6deg) scale(.7);opacity:0}}
+.sticker-popup.hide{animation:stickerOut .3s ease forwards}
+.stk-card{position:relative;border-radius:22px;padding:22px 34px 18px;min-width:220px;}
+.stk-card.correct-stk{background:repeating-linear-gradient(-45deg,#1a1a1a 0px,#1a1a1a 28px,#2e7d32 28px,#2e7d32 56px);border:4px solid #fff;}
+.stk-card.next-stk{background:linear-gradient(135deg,#1a1a1a,#33691e);border:4px solid #aed581;}
+.stk-card.end-stk{background:linear-gradient(135deg,#1a1a1a 0%,#bf8600 100%);border:4px solid #ffd54f;}
+.stk-card.all-stk{background:repeating-linear-gradient(-45deg,#1a1a1a 0px,#1a1a1a 28px,#1565c0 28px,#1565c0 56px);border:4px solid #fff;}
+.stk-main-txt{font-family:'Heebo',sans-serif;font-weight:900;font-size:2.4rem;line-height:1.1;color:#fff;-webkit-text-stroke:3px #000;paint-order:stroke fill;display:block;margin-bottom:4px;text-shadow:3px 3px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000;}
+.stk-sub-txt{font-family:'Heebo',sans-serif;font-weight:800;font-size:1.1rem;color:#ffd54f;-webkit-text-stroke:1.5px #000;paint-order:stroke fill;display:block;text-shadow:2px 2px 0 #000;}
+.stk-icon{font-size:2.2rem;display:block;margin-bottom:6px;filter:drop-shadow(2px 2px 0 #000)}
+.stk-score{background:#ffd54f;color:#1a1a1a;border:3px solid #000;border-radius:30px;padding:6px 18px;font-family:'Heebo',sans-serif;font-weight:900;font-size:1.3rem;display:inline-block;margin-top:10px;text-shadow:none;-webkit-text-stroke:0;}
+
 /* SETUP OVERLAY */
 #setup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:999}
 .setup-box{background:#fff;border-radius:24px;padding:36px 40px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
@@ -140,32 +157,42 @@ body{font-family:'Heebo',Arial,sans-serif;background:linear-gradient(135deg,#f0f
 </head>
 <body>
 
-<!-- FIREBASE SETUP OVERLAY -->
+<!-- FIREBASE SETUP OVERLAY – מתחבר אוטומטי -->
 <div id="setup-overlay">
-  <div class="setup-box">
-    <div class="setup-title">🔥 הגדרת Firebase</div>
-    <div class="setup-sub">
-      כדי שחניכים יוכלו להתחבר ממכשירים שונים, יש להגדיר Firebase חד-פעמי.<br>
-      <strong>אין לך Firebase עדיין?</strong> <a href="https://console.firebase.google.com" target="_blank">לחץ כאן ליצירת חשבון חינמי</a>
+  <div class="setup-box" style="text-align:center">
+    <div style="font-size:3rem;margin-bottom:12px;animation:spin 1.2s linear infinite">🔥</div>
+    <div class="setup-title">מתחבר ל-Firebase...</div>
+    <div class="setup-sub" id="setup-sub-msg">אנא המתן מספר שניות</div>
+    <div id="setup-error" class="setup-error" style="display:none"></div>
+    <!-- שדות גיבוי – מוצגים רק אם יש שגיאה -->
+    <div id="manual-fields" style="display:none;margin-top:16px;text-align:right">
+      <div class="setup-field">
+        <label>🔗 Database URL</label>
+        <input type="text" id="inp-dburl" dir="ltr">
+      </div>
+      <div class="setup-field">
+        <label>🔑 API Key</label>
+        <input type="text" id="inp-apikey" dir="ltr">
+      </div>
+      <div class="setup-field">
+        <label>📦 Project ID</label>
+        <input type="text" id="inp-projectid" dir="ltr">
+      </div>
+      <button class="btn-connect" onclick="connectFirebase()">🚀 נסה שוב</button>
     </div>
-    <div class="setup-field">
-      <label>🔗 Database URL</label>
-      <input type="text" id="inp-dburl" placeholder="https://your-project-default-rtdb.firebaseio.com" dir="ltr">
-      <div class="setup-hint">מוצא ב: Project Settings → Realtime Database → Database URL</div>
+  </div>
+</div>
+<style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+
+<!-- STICKER OVERLAY -->
+<div id="sticker-overlay">
+  <div class="sticker-popup" id="sticker-popup">
+    <div class="stk-card" id="stk-card">
+      <span class="stk-icon" id="stk-icon">🎯</span>
+      <span class="stk-main-txt" id="stk-main">כגז אחי!</span>
+      <span class="stk-sub-txt" id="stk-sub">כולם ענו 🔥</span>
+      <div class="stk-score" id="stk-score" style="display:none"></div>
     </div>
-    <div class="setup-field">
-      <label>🔑 API Key</label>
-      <input type="text" id="inp-apikey" placeholder="AIzaSy..." dir="ltr">
-      <div class="setup-hint">מוצא ב: Project Settings → General → Web App → apiKey</div>
-    </div>
-    <div class="setup-field">
-      <label>📦 Project ID</label>
-      <input type="text" id="inp-projectid" placeholder="your-project-id" dir="ltr">
-      <div class="setup-hint">מוצא ב: Project Settings → General → Project ID</div>
-    </div>
-    <div id="setup-error" class="setup-error">❌ שגיאה – בדוק שה-Database URL נכון ושה-Rules מוגדרים כ-public</div>
-    <button class="btn-connect" onclick="connectFirebase()">🚀 התחבר ל-Firebase</button>
-    <div class="skip-link" onclick="useSavedConfig()">✅ יש לי כבר הגדרות שמורות</div>
   </div>
 </div>
 
@@ -423,9 +450,13 @@ window.addEventListener('load', async () => {
       await initDB(c);
       // overlay already hidden by initDB on success
     } catch(e) {
-      // overlay stays visible so user can fix manually
-      document.getElementById('setup-error').textContent = '❌ שגיאת חיבור: ' + e.message;
+      document.getElementById('setup-sub-msg').textContent = 'בדוק שה-Realtime Database פעיל וה-Rules מוגדרים ל-test mode';
+      document.getElementById('setup-error').textContent = '❌ ' + e.message;
       document.getElementById('setup-error').style.display = 'block';
+      document.getElementById('manual-fields').style.display = 'block';
+      document.getElementById('inp-dburl').value     = DEFAULT_CONFIG.databaseURL;
+      document.getElementById('inp-apikey').value    = DEFAULT_CONFIG.apiKey;
+      document.getElementById('inp-projectid').value = DEFAULT_CONFIG.projectId;
     }
   }
 });
@@ -695,6 +726,11 @@ window.endQuestion = async function() {
   questionDone[currentQ] = true;
   renderQList();
   renderAnswerCards(false);
+  // Sticker based on correct %
+  const _ans = answers[currentQ] || {};
+  const _total = Object.keys(_ans).length;
+  const _correct = Object.values(_ans).filter(a => a.answer === q.correct).length;
+  stickerQuestionDone(_correct, _total);
   showLeaderboard();
 
   // Show correct buttons
@@ -711,6 +747,7 @@ function checkAllAnswered() {
   const curAnswers = answers[currentQ] || {};
   const pids = Object.keys(players);
   if (pids.length > 0 && Object.keys(curAnswers).length >= pids.length) {
+    stickerAllAnswered();
     setTimeout(() => { if (gamePhase === 'active') endQuestion(); }, 1500);
   }
 }
@@ -719,6 +756,7 @@ window.nextQuestion = function() {
   currentQ++;
   document.getElementById('btn-next').style.display = 'none';
   document.getElementById('lb-section').style.display = 'none';
+  stickerNextQ();
   showQuestion();
 };
 
@@ -732,6 +770,7 @@ window.skipQuestion = function() {
 window.finishGame = function() {
   gamePhase = 'gameover';
   clearInterval(timerInterval);
+  stickerGameEnd();
 
   document.getElementById('view-question').style.display = 'none';
   document.getElementById('view-final').style.display = 'block';
@@ -775,6 +814,36 @@ window.newGame = function() {
     updatedAt: Date.now()
   });
 };
+
+/* ================================================================ STICKER POPUPS */
+let _stickerTimer = null;
+function _showSticker(icon, main, sub, cls, scoreText, duration) {
+  const popup = document.getElementById('sticker-popup');
+  const card  = document.getElementById('stk-card');
+  document.getElementById('stk-icon').textContent = icon;
+  document.getElementById('stk-main').textContent = main;
+  document.getElementById('stk-sub').textContent  = sub;
+  const scoreEl = document.getElementById('stk-score');
+  if (scoreText) { scoreEl.textContent = scoreText; scoreEl.style.display = 'inline-block'; }
+  else scoreEl.style.display = 'none';
+  card.className = 'stk-card ' + cls;
+  clearTimeout(_stickerTimer);
+  popup.classList.remove('hide','show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  _stickerTimer = setTimeout(() => {
+    popup.classList.add('hide');
+    setTimeout(() => popup.classList.remove('show','hide'), 350);
+  }, duration || 2000);
+}
+function stickerAllAnswered() { _showSticker('⚡','כולם ענו!','נהג, התקדם! 🔥','all-stk',null,1800); }
+function stickerQuestionDone(correct, total) {
+  const pct = total ? Math.round(correct/total*100) : 0;
+  if (pct >= 70) _showSticker('🎯','כגז אחי!',`${correct}/${total} ענו נכון 💥`,'correct-stk',null,2000);
+  else _showSticker('💪','המשיכו!',`${correct}/${total} ענו נכון`,'next-stk',null,2000);
+}
+function stickerNextQ() { _showSticker('▶','נהג התקדם!','שאלה הבאה...','next-stk',null,1400); }
+function stickerGameEnd() { _showSticker('🪖','TANK YOU','אנחנו השריון של ישראל','end-stk',null,3000); }
 
 /* ================================================================ UTILS */
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
