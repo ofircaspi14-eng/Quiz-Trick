@@ -365,14 +365,20 @@ async function initDB(config) {
   const app = initializeApp(config, 'quiz-admin-' + Date.now());
   db = getDatabase(app);
 
-  // Test connection
-  const testRef = ref(db, '.info/connected');
+  // Test connection – wait for true or timeout after 8s
   await new Promise((resolve, reject) => {
-    const unsub = onValue(testRef, (snap) => {
-      off(testRef);
-      if (snap.val() === true) resolve();
-      else reject(new Error('לא ניתן להתחבר לבסיס הנתונים'));
-    }, reject);
+    const timer = setTimeout(() => {
+      off(ref(db, '.info/connected'));
+      reject(new Error('פג זמן חיבור – בדוק שה-Realtime Database פעיל וה-Rules מוגדרים ל-test mode'));
+    }, 8000);
+    onValue(ref(db, '.info/connected'), (snap) => {
+      if (snap.val() === true) {
+        clearTimeout(timer);
+        off(ref(db, '.info/connected'));
+        resolve();
+      }
+      // false = עדיין לא מחובר, ממתין...
+    }, (err) => { clearTimeout(timer); reject(err); });
   });
 
   // Generate room code
