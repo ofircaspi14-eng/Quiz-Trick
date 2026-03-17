@@ -7,63 +7,26 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',Arial,sans-serif;background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 50%,#fce4ec 100%);color:#1a1a2e;min-height:100vh}
 
-body{
-  font-family:'Heebo',Arial,sans-serif;
-  background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 50%,#fce4ec 100%);
-  color:#1a1a2e;min-height:100vh;
-}
-
-/* ---- TOPBAR ---- */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 24px;
-  background:#fff;
-  border-bottom:1px solid #e8eaf0;
-  box-shadow:0 2px 10px rgba(0,0,0,.07);
-  position:sticky;top:0;z-index:100;
-}
-.topbar-logo{
-  font-size:1.3rem;font-weight:900;
-  background:linear-gradient(135deg,#e91e63,#ff6f00,#1565c0);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#fff;border-bottom:1px solid #e8eaf0;box-shadow:0 2px 10px rgba(0,0,0,.07);position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:1.3rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#ff6f00,#1565c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .topbar-status{display:flex;gap:16px;align-items:center;font-size:.85rem;color:#777}
 .status-dot{width:10px;height:10px;border-radius:50%;background:#4caf50;display:inline-block;animation:pulseDot 1.5s ease-in-out infinite}
 @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
-.state-chip{
-  background:#e8f5e9;color:#2e7d32;
-  padding:4px 12px;border-radius:20px;font-weight:700;font-size:.8rem;
-}
+.state-chip{background:#e8f5e9;color:#2e7d32;padding:4px 12px;border-radius:20px;font-weight:700;font-size:.8rem}
 .state-chip.active{background:#e3f2fd;color:#1565c0}
 .state-chip.done{background:#fce4ec;color:#c2185b}
 
-/* ---- LAYOUT ---- */
-.layout{
-  display:grid;grid-template-columns:280px 1fr;
-  height:calc(100vh - 57px);
-}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 57px)}
 
-/* ---- SIDEBAR ---- */
-.sidebar{
-  background:#fff;
-  border-left:1px solid #e8eaf0;
-  overflow-y:auto;padding:16px;
-  box-shadow:2px 0 10px rgba(0,0,0,.04);
-}
-.sidebar-title{
-  font-size:.72rem;font-weight:700;color:#aaa;
-  letter-spacing:.6px;text-transform:uppercase;
-  margin-bottom:10px;margin-top:16px;
-}
+/* SIDEBAR */
+.sidebar{background:#fff;border-left:1px solid #e8eaf0;overflow-y:auto;padding:16px;box-shadow:2px 0 10px rgba(0,0,0,.04)}
+.sidebar-title{font-size:.72rem;font-weight:700;color:#aaa;letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;margin-top:16px}
 .sidebar-title:first-child{margin-top:0}
-
-/* player cards */
-.player-card{
-  display:flex;align-items:center;gap:10px;
-  background:#f9f9fb;border:1px solid #eee;border-radius:12px;
-  padding:10px 12px;margin-bottom:8px;transition:all .2s;
-}
+.player-card{display:flex;align-items:center;gap:10px;background:#f9f9fb;border:1px solid #eee;border-radius:12px;padding:10px 12px;margin-bottom:8px;transition:all .2s}
 .player-card.answered{background:#e8f5e9;border-color:#a5d6a7}
 .p-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .p-info{flex:1;min-width:0}
@@ -73,384 +36,245 @@ body{
 .badge-answered{background:#4caf50;color:#fff}
 .badge-waiting{background:#e0e0e0;color:#888}
 .players-empty{color:#bbb;font-size:.85rem;padding:14px 0;text-align:center}
-
-/* question list */
-.q-list-item{
-  display:flex;align-items:center;gap:8px;
-  padding:7px 10px;border-radius:8px;cursor:pointer;
-  font-size:.8rem;margin-bottom:3px;
-  transition:background .15s;color:#888;
-}
-.q-list-item:hover{background:#f0f4ff}
+.q-list-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:.8rem;margin-bottom:3px;color:#888}
 .q-list-item.active-q{background:#e3f2fd;color:#1565c0;font-weight:700}
 .q-list-item.done-q{color:#ccc}
-.q-num-badge{
-  width:22px;height:22px;border-radius:6px;font-size:.68rem;font-weight:900;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  background:#f0f0f0;color:#aaa;
-}
+.q-num-badge{width:22px;height:22px;border-radius:6px;font-size:.68rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#f0f0f0;color:#aaa}
 .q-num-badge.done{background:#4caf50;color:#fff}
 .q-num-badge.active{background:#1565c0;color:#fff}
 
-/* ---- MAIN AREA ---- */
+/* MAIN */
 .main-area{padding:20px 24px;overflow-y:auto}
 
-/* ---- LOBBY ---- */
-#view-lobby{
-  display:flex;flex-direction:column;align-items:center;
-  justify-content:center;min-height:60vh;text-align:center;
-}
-.lobby-title{
-  font-size:2.5rem;font-weight:900;margin-bottom:8px;
-  background:linear-gradient(135deg,#e91e63,#ff6f00);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-}
-.lobby-desc{color:#888;margin-bottom:28px;font-size:1rem}
+/* LOBBY */
+#view-lobby{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:28px;text-align:center}
+.lobby-title{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#1565c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.room-code-box{background:#fff;border:3px solid #1565c0;border-radius:20px;padding:24px 40px;box-shadow:0 8px 32px rgba(21,101,192,.15)}
+.room-code-label{font-size:.85rem;color:#888;margin-bottom:6px}
+.room-code{font-size:3rem;font-weight:900;color:#1565c0;letter-spacing:8px;font-family:monospace}
+.room-hint{font-size:.82rem;color:#aaa;margin-top:6px}
+.time-picker{display:flex;gap:12px;align-items:center}
+.time-picker label{font-weight:700;font-size:.95rem;color:#555}
+.time-btn{width:70px;height:48px;border:2px solid #e0e0e0;border-radius:14px;font-family:'Heebo',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;background:#fff;color:#555;transition:all .2s}
+.time-btn.selected{background:#1565c0;color:#fff;border-color:#1565c0;transform:scale(1.08)}
+.btn-start{background:linear-gradient(135deg,#43a047,#1b5e20);color:#fff;border:none;border-radius:18px;padding:18px 50px;font-family:'Heebo',sans-serif;font-size:1.2rem;font-weight:900;cursor:pointer;box-shadow:0 6px 24px rgba(67,160,71,.4);transition:all .2s}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(67,160,71,.5)}
+.btn-start:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.firebase-config-notice{background:#fff3e0;border:2px solid #ff9800;border-radius:14px;padding:16px 22px;max-width:500px;font-size:.88rem;color:#e65100;line-height:1.6}
+.firebase-config-notice strong{display:block;font-size:1rem;margin-bottom:6px}
 
-.waiting-badge{
-  background:#fff;border:2px solid #e3f2fd;border-radius:18px;
-  padding:20px 40px;margin-bottom:24px;
-  box-shadow:0 4px 20px rgba(21,101,192,.1);
-}
-.waiting-badge .wbig{font-size:3rem;font-weight:900;color:#1565c0;line-height:1}
-.waiting-badge .wlbl{font-size:.85rem;color:#888;margin-top:4px}
-
-.section-lbl{font-size:.75rem;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.time-row{display:flex;gap:10px;margin-bottom:28px}
-.time-opt{
-  padding:12px 24px;border-radius:12px;
-  border:2px solid #e0e0e0;background:#f9f9f9;
-  color:#888;font-size:1.05rem;font-weight:800;
-  cursor:pointer;font-family:'Heebo',Arial,sans-serif;transition:all .2s;
-}
-.time-opt.sel{border-color:#e91e63;background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;box-shadow:0 4px 14px rgba(233,30,99,.35)}
-.time-opt:hover:not(.sel){border-color:#e91e63;color:#e91e63}
-
-.lobby-info{color:#bbb;font-size:.83rem;margin-bottom:24px}
-
-.btn-start-game{
-  padding:17px 56px;border-radius:50px;border:none;
-  background:linear-gradient(135deg,#e91e63,#c2185b);
-  color:#fff;font-size:1.25rem;font-weight:900;
-  cursor:pointer;font-family:'Heebo',Arial,sans-serif;
-  transition:transform .15s,box-shadow .15s;
-  box-shadow:0 4px 20px rgba(233,30,99,.35);
-}
-.btn-start-game:hover{transform:scale(1.04);box-shadow:0 8px 32px rgba(233,30,99,.5)}
-
-/* ---- QUESTION VIEW ---- */
+/* QUESTION VIEW */
 #view-question{display:none}
+.preview-banner{background:linear-gradient(135deg,#ff9800,#f57c00);color:#fff;border-radius:14px;padding:10px 20px;text-align:center;font-weight:800;font-size:.95rem;margin-bottom:16px}
+.timer-wrap{text-align:center;margin-bottom:16px}
+.big-timer{font-size:4.5rem;font-weight:900;color:#1565c0;line-height:1;transition:color .3s}
+.big-timer.urgent{color:#e53935;animation:timerPulse .5s ease-in-out infinite}
+@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.timer-bar-wrap{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin-top:8px}
+.timer-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,#4caf50,#ff9800);transition:width .5s linear}
+.stats-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.stat-chip{flex:1;min-width:80px;background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:10px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.stat-chip .sv{font-size:1.6rem;font-weight:900;color:#1565c0}
+.stat-chip .sl{font-size:.7rem;color:#999;font-weight:700}
+.q-card{background:#fff;border-radius:18px;padding:20px 24px;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-bottom:16px;border-right:6px solid #1565c0;transition:opacity .3s}
+.q-card.dimmed{opacity:.75}
+.q-text{font-size:1.1rem;font-weight:800;color:#1a1a2e;line-height:1.5}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.ans-card{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,.06);border:2px solid transparent;transition:all .3s;position:relative;overflow:hidden}
+.ans-card.c0{border-color:#e53935}.ans-card.c1{border-color:#fb8c00}.ans-card.c2{border-color:#43a047}.ans-card.c3{border-color:#7b1fa2}
+.ans-card.dimmed{opacity:.6}
+.ans-card.correct-ans{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-color:#2e7d32!important;box-shadow:0 4px 16px rgba(46,125,50,.3)}
+.ans-letter{font-weight:900;font-size:.75rem;color:inherit;opacity:.6;margin-bottom:4px}
+.ans-text{font-size:.85rem;font-weight:700;color:#1a1a2e;line-height:1.4}
+.vote-bar-wrap{height:6px;background:#f0f0f0;border-radius:3px;margin-top:8px;overflow:hidden}
+.vote-bar{height:100%;border-radius:3px;transition:width .4s ease}
+.vote-count{font-size:.7rem;color:#888;margin-top:3px;font-weight:700}
+.vote-pct{font-size:.7rem;color:#888;float:left}
+.ans-colors{background:['#ef5350','#fb8c00','#43a047','#7b1fa2']}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
+.btn{border:none;border-radius:14px;padding:14px 28px;font-family:'Heebo',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-show{background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;box-shadow:0 4px 16px rgba(233,30,99,.35)}
+.btn-show:hover:not(:disabled){transform:translateY(-2px)}
+.btn-end{background:linear-gradient(135deg,#ff7043,#e64a19);color:#fff;box-shadow:0 4px 16px rgba(255,112,67,.35)}
+.btn-end:hover:not(:disabled){transform:translateY(-2px)}
+.btn-next{background:linear-gradient(135deg,#43a047,#1b5e20);color:#fff;box-shadow:0 4px 16px rgba(67,160,71,.35);animation:popIn .4s ease}
+@keyframes popIn{0%{transform:scale(0);opacity:0}80%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.btn-next:hover:not(:disabled){transform:translateY(-2px)}
+.btn-finish{background:linear-gradient(135deg,#7b1fa2,#4a148c);color:#fff;box-shadow:0 4px 16px rgba(123,31,162,.35)}
+.btn-skip{background:#f5f5f5;color:#888;border:1px solid #e0e0e0}
+.btn-skip:hover:not(:disabled){background:#eeeeee}
 
-/* top control bar */
-.q-control-bar{
-  display:grid;grid-template-columns:auto 1fr auto;
-  align-items:center;gap:16px;
-  background:#fff;border-radius:18px;padding:16px 24px;
-  margin-bottom:16px;
-  box-shadow:0 4px 20px rgba(0,0,0,.07);
-}
-.qcb-label{font-size:.8rem;color:#aaa;font-weight:600}
-.qcb-value{font-size:1.1rem;font-weight:900;color:#1a1a2e}
+/* LEADERBOARD */
+.lb-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-top:16px}
+.lb-title{font-weight:900;font-size:1.1rem;color:#1a1a2e;margin-bottom:14px;text-align:center}
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;margin-bottom:6px;background:#f8f9ff;transition:background .2s}
+.lb-row.rank-1{background:linear-gradient(135deg,#fff8e1,#fffde7);border:2px solid #ffd54f}
+.lb-row.rank-2{background:linear-gradient(135deg,#f5f5f5,#eeeeee);border:2px solid #bdbdbd}
+.lb-row.rank-3{background:linear-gradient(135deg,#fbe9e7,#fff3e0);border:2px solid #ffab91}
+.lb-medal{font-size:1.4rem;width:32px;text-align:center;flex-shrink:0}
+.lb-name{flex:1;font-weight:800;font-size:.95rem;color:#1a1a2e}
+.lb-pts{font-weight:900;font-size:1rem;color:#e91e63}
 
-/* giant timer */
-.timer-wrap{text-align:center}
-.timer-number{
-  font-size:4.5rem;font-weight:900;color:#1565c0;
-  line-height:1;transition:color .3s;
-}
-.timer-number.urgent{color:#e91e63;animation:timerPulse .35s ease infinite}
-@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.timer-lbl{font-size:.65rem;color:#aaa;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
-
-/* response stats */
-.resp-bar{
-  display:flex;gap:12px;
-  background:#fff;border-radius:16px;padding:14px 20px;
-  margin-bottom:14px;
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
-.resp-stat{flex:1;text-align:center}
-.rs-val{font-size:2rem;font-weight:900}
-.rs-lbl{font-size:.72rem;color:#aaa;margin-top:2px}
-.rs-blue{color:#1565c0}.rs-green{color:#00897b}.rs-red{color:#e53935}.rs-grey{color:#aaa}
-
-/* timer progress bar */
-.tbar-wrap{width:100%;height:8px;background:#e8eaf0;border-radius:8px;overflow:hidden;margin-bottom:14px}
-.tbar{height:100%;border-radius:8px;background:linear-gradient(90deg,#1565c0,#e91e63);animation:timerShrink linear forwards}
-@keyframes timerShrink{from{width:100%}to{width:0%}}
-
-/* question card */
-.q-card{
-  background:#fff;border-radius:18px;padding:22px 24px;
-  margin-bottom:14px;
-  box-shadow:0 4px 18px rgba(0,0,0,.07);
-}
-.q-card-num{font-size:.72rem;color:#bbb;font-weight:600;margin-bottom:6px}
-.q-card-text{font-size:1.25rem;font-weight:700;line-height:1.6;color:#1a1a2e}
-
-/* answers grid */
-.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.ans-card{
-  border-radius:14px;padding:16px 16px;
-  display:flex;align-items:center;gap:10px;
-  font-size:.95rem;font-weight:700;color:#fff;
-  position:relative;overflow:hidden;
-  box-shadow:0 3px 12px rgba(0,0,0,.15);
-  transition:box-shadow .2s;
-}
-.a-c{background:linear-gradient(135deg,#ff5252,#d32f2f)}
-.b-c{background:linear-gradient(135deg,#2979ff,#1565c0)}
-.c-c{background:linear-gradient(135deg,#ffab00,#e65100)}
-.d-c{background:linear-gradient(135deg,#00e676,#00897b)}
-.ans-card.correct-ans{
-  box-shadow:0 0 0 4px #1a1a2e,0 6px 24px rgba(0,0,0,.3)!important;
-  transform:scale(1.02);
-}
-.ans-ltr{
-  width:32px;height:32px;border-radius:50%;
-  background:rgba(0,0,0,.2);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.9rem;flex-shrink:0;
-}
-.ans-text-content{flex:1;line-height:1.4}
-.ans-vote-count{
-  background:rgba(0,0,0,.2);
-  border-radius:12px;padding:2px 10px;
-  font-size:1rem;font-weight:900;min-width:28px;text-align:center;
-}
-.ans-vote-bar{
-  position:absolute;bottom:0;right:0;height:5px;
-  background:rgba(255,255,255,.5);
-  transition:width .45s ease;border-radius:0 0 0 4px;
-}
-
-/* control buttons */
-.ctrl-btns{
-  display:flex;gap:10px;justify-content:center;
-  flex-wrap:wrap;margin-bottom:16px;
-}
-.btn-ctrl{
-  padding:13px 28px;border-radius:50px;border:none;
-  font-size:.95rem;font-weight:800;cursor:pointer;
-  font-family:'Heebo',Arial,sans-serif;transition:transform .15s,box-shadow .15s;
-}
-.btn-ctrl:hover{transform:scale(1.04)}
-.btn-show{
-  background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;
-  box-shadow:0 4px 16px rgba(21,101,192,.4);
-  font-size:1.15rem;padding:16px 40px;
-  animation:popIn .4s ease;
-}
-.btn-end{background:linear-gradient(135deg,#ff5252,#d32f2f);color:#fff;box-shadow:0 3px 12px rgba(255,82,82,.35)}
-.btn-skip{background:#f0f0f0;color:#888;border:1px solid #ddd}
-.btn-skip:hover{background:#e0e0e0;border-color:#bbb}
-.btn-next{
-  background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff;
-  box-shadow:0 3px 12px rgba(76,175,80,.4);
-  display:none;font-size:1.05rem;padding:14px 36px;
-  animation:popIn .4s ease;
-}
-@keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
-.btn-finish{
-  background:linear-gradient(135deg,#9c27b0,#6a1b9a);color:#fff;
-  box-shadow:0 3px 12px rgba(156,39,176,.4);
-  display:none;font-size:1.05rem;padding:14px 36px;
-}
-
-/* preview banner */
-.preview-banner{
-  background:linear-gradient(135deg,#fff3e0,#ffe0b2);
-  border:2px solid #ffb74d;border-radius:14px;
-  padding:14px 20px;margin-bottom:14px;
-  display:none;text-align:center;
-  font-size:.95rem;font-weight:700;color:#e65100;
-}
-.preview-banner.show{display:block}
-
-/* leaderboard panel */
-.lb-panel{
-  background:#fff;border-radius:18px;padding:20px 22px;
-  box-shadow:0 4px 18px rgba(0,0,0,.07);
-  margin-top:16px;display:none;
-}
-.lb-panel-title{
-  font-size:.72rem;font-weight:700;color:#aaa;
-  text-transform:uppercase;letter-spacing:.5px;
-  margin-bottom:14px;
-}
-.lb-row{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 12px;background:#f9f9fb;
-  border-radius:10px;margin-bottom:6px;
-  animation:slideUp .3s ease backwards;
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.lb-rank{
-  width:28px;height:28px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.8rem;flex-shrink:0;
-}
-.r1{background:linear-gradient(135deg,#ffd700,#ff8f00);color:#fff}
-.r2{background:linear-gradient(135deg,#b0bec5,#607d8b);color:#fff}
-.r3{background:linear-gradient(135deg,#ff7043,#bf360c);color:#fff}
-.rn{background:#e0e0e0;color:#888}
-.lb-name{flex:1;font-weight:700;font-size:.9rem;color:#1a1a2e}
-.lb-pts{font-size:1rem;font-weight:900;color:#e91e63}
-.lb-correct{font-size:.75rem;color:#00897b;font-weight:700}
-
-/* ---- FINAL ---- */
+/* FINAL */
 #view-final{display:none;text-align:center;padding:30px 0}
-.final-card{
-  background:#fff;border-radius:22px;padding:36px;
-  max-width:580px;margin:0 auto;
-  box-shadow:0 8px 40px rgba(0,0,0,.1);
-}
-.final-title{font-size:2rem;font-weight:900;color:#1a1a2e;margin-bottom:4px}
-.final-sub{color:#888;margin-bottom:24px}
-.winner-box{
-  background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,143,0,.08));
-  border:2px solid rgba(255,215,0,.4);
-  border-radius:16px;padding:24px;margin-bottom:22px;
-}
-.winner-emoji{font-size:3.5rem}
-.winner-name{font-size:1.8rem;font-weight:900;color:#e65100;margin:6px 0 4px}
-.winner-score{font-size:.95rem;color:#aaa}
-.btn-new-game{
-  margin-top:20px;padding:14px 40px;border-radius:50px;border:none;
-  background:linear-gradient(135deg,#e91e63,#c2185b);
-  color:#fff;font-size:1.05rem;font-weight:800;
-  cursor:pointer;font-family:'Heebo',Arial,sans-serif;
-  transition:transform .15s;box-shadow:0 4px 16px rgba(233,30,99,.35);
-}
-.btn-new-game:hover{transform:scale(1.05)}
+.final-title{font-size:2.2rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
+.btn-new{background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;box-shadow:0 4px 16px rgba(21,101,192,.4);margin:0 auto}
 
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:#ddd;border-radius:10px}
-::-webkit-scrollbar-track{background:transparent}
+/* SETUP OVERLAY */
+#setup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:999}
+.setup-box{background:#fff;border-radius:24px;padding:36px 40px;max-width:520px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.setup-title{font-size:1.5rem;font-weight:900;color:#1a1a2e;margin-bottom:8px}
+.setup-sub{font-size:.88rem;color:#666;margin-bottom:24px;line-height:1.6}
+.setup-field{margin-bottom:16px}
+.setup-field label{display:block;font-weight:700;font-size:.85rem;color:#444;margin-bottom:6px}
+.setup-field input{width:100%;padding:12px 16px;border:2px solid #e0e0e0;border-radius:12px;font-family:'Heebo',sans-serif;font-size:.9rem;transition:border .2s;direction:ltr}
+.setup-field input:focus{outline:none;border-color:#1565c0}
+.setup-hint{font-size:.75rem;color:#aaa;margin-top:4px}
+.btn-connect{width:100%;padding:14px;background:linear-gradient(135deg,#ff9800,#f57c00);color:#fff;border:none;border-radius:14px;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-connect:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,152,0,.4)}
+.setup-error{color:#e53935;font-size:.82rem;margin-top:8px;display:none}
+.skip-link{text-align:center;margin-top:12px;font-size:.8rem;color:#1565c0;cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- FIREBASE SETUP OVERLAY -->
+<div id="setup-overlay">
+  <div class="setup-box">
+    <div class="setup-title">🔥 הגדרת Firebase</div>
+    <div class="setup-sub">
+      כדי שחניכים יוכלו להתחבר ממכשירים שונים, יש להגדיר Firebase חד-פעמי.<br>
+      <strong>אין לך Firebase עדיין?</strong> <a href="https://console.firebase.google.com" target="_blank">לחץ כאן ליצירת חשבון חינמי</a>
+    </div>
+    <div class="setup-field">
+      <label>🔗 Database URL</label>
+      <input type="text" id="inp-dburl" placeholder="https://your-project-default-rtdb.firebaseio.com" dir="ltr">
+      <div class="setup-hint">מוצא ב: Project Settings → Realtime Database → Database URL</div>
+    </div>
+    <div class="setup-field">
+      <label>🔑 API Key</label>
+      <input type="text" id="inp-apikey" placeholder="AIzaSy..." dir="ltr">
+      <div class="setup-hint">מוצא ב: Project Settings → General → Web App → apiKey</div>
+    </div>
+    <div class="setup-field">
+      <label>📦 Project ID</label>
+      <input type="text" id="inp-projectid" placeholder="your-project-id" dir="ltr">
+      <div class="setup-hint">מוצא ב: Project Settings → General → Project ID</div>
+    </div>
+    <div id="setup-error" class="setup-error">❌ שגיאה – בדוק שה-Database URL נכון ושה-Rules מוגדרים כ-public</div>
+    <button class="btn-connect" onclick="connectFirebase()">🚀 התחבר ל-Firebase</button>
+    <div class="skip-link" onclick="useSavedConfig()">✅ יש לי כבר הגדרות שמורות</div>
+  </div>
+</div>
+
+<!-- MAIN UI -->
 <div class="topbar">
-  <div class="topbar-logo">🛡️ בוחן תחבולה – פאנל מנהל</div>
+  <div class="topbar-logo">🎯 בוחן תחבולה – מנהל</div>
   <div class="topbar-status">
-    <span class="status-dot"></span>
-    <span id="player-count-top">0 חניכים מחוברים</span>
-    <span style="color:#ddd">|</span>
-    <span class="state-chip" id="game-state-chip">ממתין</span>
+    <span><span class="status-dot"></span> מחובר ל-Firebase</span>
+    <span id="player-count">0 חניכים</span>
+    <span id="state-chip" class="state-chip">ממתין</span>
   </div>
 </div>
 
 <div class="layout">
-
   <!-- SIDEBAR -->
   <div class="sidebar">
-    <div class="sidebar-title">👤 חניכים מחוברים</div>
-    <div id="player-list"><div class="players-empty">ממתין לחניכים...</div></div>
+    <div class="sidebar-title">חניכים מחוברים</div>
+    <div id="players-list"><div class="players-empty">ממתין לחניכים...</div></div>
 
-    <div class="sidebar-title" id="q-list-title" style="display:none">📋 רשימת שאלות</div>
+    <div class="sidebar-title">רשימת שאלות</div>
     <div id="q-list"></div>
   </div>
 
-  <!-- MAIN -->
+  <!-- MAIN AREA -->
   <div class="main-area">
 
     <!-- LOBBY -->
     <div id="view-lobby">
-      <div class="lobby-title">שעת מפקד</div>
-      <div class="lobby-desc">פאנל שליטה | בוחן תחבולה – 20 שאלות</div>
-      <div class="waiting-badge">
-        <div class="wbig" id="lobby-player-count">0</div>
-        <div class="wlbl">חניכים מחוברים</div>
+      <div class="lobby-title">🏆 בוחן תחבולה</div>
+
+      <div class="room-code-box">
+        <div class="room-code-label">קוד חדר לחניכים</div>
+        <div class="room-code" id="room-code-display">------</div>
+        <div class="room-hint">חניכים מכניסים קוד זה בפאנל החניך</div>
       </div>
-      <div class="section-lbl">⏱ זמן לכל שאלה</div>
-      <div class="time-row">
-        <button class="time-opt" onclick="selectTime(30,this)">30 שניות</button>
-        <button class="time-opt sel" onclick="selectTime(60,this)">60 שניות</button>
-        <button class="time-opt" onclick="selectTime(90,this)">90 שניות</button>
+
+      <div class="time-picker">
+        <label>⏱ זמן לשאלה:</label>
+        <button class="time-btn" onclick="setTime(30)">30s</button>
+        <button class="time-btn selected" onclick="setTime(60)">60s</button>
+        <button class="time-btn" onclick="setTime(90)">90s</button>
       </div>
-      <div class="lobby-info">פתח את <strong>quiz-player.html</strong> בכל מכשיר חניך</div>
-      <button class="btn-start-game" onclick="startGame()">🚀 התחל בוחן</button>
+
+      <button class="btn-start" id="btn-start" onclick="startGame()" disabled>
+        🚀 התחל משחק
+      </button>
+      <div style="font-size:.82rem;color:#aaa">יש להמתין לפחות לחניך אחד מחובר</div>
     </div>
 
-    <!-- QUESTION CONTROL -->
+    <!-- QUESTION VIEW -->
     <div id="view-question">
-
-      <!-- Top control bar -->
-      <div class="q-control-bar">
-        <div>
-          <div class="qcb-lbl" style="font-size:.72rem;color:#aaa;font-weight:600">שאלה</div>
-          <div class="qcb-value" id="q-ctrl-label">1 / 20</div>
-        </div>
-        <div class="timer-wrap">
-          <div class="timer-number" id="ctrl-timer">60</div>
-          <div class="timer-lbl">שניות</div>
-        </div>
-        <div style="text-align:left">
-          <div style="font-size:.72rem;color:#aaa;font-weight:600">מצב</div>
-          <div style="font-size:1rem;font-weight:800;color:#1565c0" id="q-status-label">פעיל ⏳</div>
-        </div>
+      <div id="preview-banner" class="preview-banner" style="display:none">
+        👁 תצוגה מקדימה – החניכים עדיין לא רואים את השאלה
       </div>
 
-      <!-- Timer bar -->
-      <div class="tbar-wrap"><div class="tbar" id="ctrl-timer-bar"></div></div>
-
-      <!-- Response stats -->
-      <div class="resp-bar">
-        <div class="resp-stat"><div class="rs-val rs-blue" id="resp-count">0</div><div class="rs-lbl">ענו</div></div>
-        <div class="resp-stat"><div class="rs-val rs-green" id="resp-correct">0</div><div class="rs-lbl">נכון</div></div>
-        <div class="resp-stat"><div class="rs-val rs-red" id="resp-wrong">0</div><div class="rs-lbl">שגוי</div></div>
-        <div class="resp-stat"><div class="rs-val rs-grey" id="resp-total">0</div><div class="rs-lbl">סה"כ</div></div>
+      <div class="timer-wrap">
+        <div class="big-timer" id="big-timer">--</div>
+        <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar" style="width:100%"></div></div>
       </div>
 
-      <!-- Question -->
-      <div class="q-card">
-        <div class="q-card-num" id="q-box-num">שאלה 1</div>
-        <div class="q-card-text" id="q-box-text"></div>
+      <div class="stats-row">
+        <div class="stat-chip"><div class="sv" id="stat-answered">0</div><div class="sl">ענו</div></div>
+        <div class="stat-chip"><div class="sv" id="stat-correct">0</div><div class="sl">✅ נכון</div></div>
+        <div class="stat-chip"><div class="sv" id="stat-wrong">0</div><div class="sl">❌ שגוי</div></div>
+        <div class="stat-chip"><div class="sv" id="stat-total">0</div><div class="sl">סה"כ</div></div>
       </div>
 
-      <!-- Answers -->
+      <div class="q-card" id="q-card">
+        <div style="font-size:.75rem;color:#aaa;font-weight:700;margin-bottom:8px" id="q-label">שאלה 1 מתוך 20</div>
+        <div class="q-text" id="q-text">טוען...</div>
+      </div>
+
       <div class="ans-grid" id="ans-grid"></div>
 
-      <!-- Preview banner -->
-      <div class="preview-banner" id="preview-banner">
-        👁️ תצוגה מקדימה – החניכים רואים מסך המתנה. לחץ "הצג שאלה" כדי להתחיל את הטיימר.
+      <div class="btn-row">
+        <button class="btn btn-show" id="btn-show" onclick="showQuestionToPlayers()">▶ הצג שאלה לחניכים</button>
+        <button class="btn btn-end" id="btn-end" onclick="endQuestion()" style="display:none">⏹ סגור שאלה</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextQuestion()" style="display:none">שאלה הבאה ▶</button>
+        <button class="btn btn-finish" id="btn-finish" onclick="finishGame()" style="display:none">🏁 סיים משחק</button>
+        <button class="btn btn-skip" id="btn-skip" onclick="skipQuestion()">⏭ דלג</button>
       </div>
 
-      <!-- Control buttons -->
-      <div class="ctrl-btns">
-        <button class="btn-ctrl btn-show" id="btn-show-q" onclick="showQuestionToPlayers()">▶ הצג שאלה לחניכים</button>
-        <button class="btn-ctrl btn-skip" id="btn-skip" onclick="skipQuestion()" style="display:none">⏭ דלג</button>
-        <button class="btn-ctrl btn-end" id="btn-end-q" onclick="endQuestion()" style="display:none">⏹ סגור שאלה</button>
-        <button class="btn-ctrl btn-next" id="btn-next-q" onclick="nextQuestion()">▶ שאלה הבאה</button>
-        <button class="btn-ctrl btn-finish" id="btn-finish-game" onclick="finishGame()">🏆 סיים בוחן</button>
+      <div id="lb-section" style="display:none">
+        <div class="lb-card">
+          <div class="lb-title">🏆 טבלת מובילים</div>
+          <div id="lb-rows"></div>
+        </div>
       </div>
-
-      <!-- Leaderboard after question -->
-      <div class="lb-panel" id="lb-section">
-        <div class="lb-panel-title">🏆 לוח מובילים אחרי שאלה זו</div>
-        <div id="lb-rows"></div>
-      </div>
-
-    </div><!-- /view-question -->
+    </div>
 
     <!-- FINAL -->
     <div id="view-final">
-      <div class="final-card">
-        <div style="font-size:3rem;margin-bottom:8px">🏆</div>
-        <div class="final-title">תוצאות סופיות</div>
-        <div class="final-sub" id="final-sub"></div>
-        <div class="winner-box" id="winner-card"></div>
-        <div id="final-lb"></div>
-        <button class="btn-new-game" onclick="newGame()">🔄 בוחן חדש</button>
+      <div class="final-title">🏅 המשחק הסתיים!</div>
+      <div class="lb-card" style="max-width:460px;margin:0 auto">
+        <div class="lb-title">🥇 תוצאות סופיות</div>
+        <div id="final-lb-rows"></div>
+      </div>
+      <div style="margin-top:24px">
+        <button class="btn btn-new" onclick="newGame()">🔄 משחק חדש</button>
       </div>
     </div>
 
   </div><!-- /main-area -->
 </div><!-- /layout -->
 
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getDatabase, ref, set, get, onValue, push, update, remove, off } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
+
 /* ================================================================ DATA */
 const QUESTIONS=[
   {q:'מהי ההגדרה היסודית של "תחבולה" לפי עקרונות המלחמה?',answers:['הוספת אמצעי הונאה לתוכנית המבצעית הקיימת.','דרך מחוכמת לעשיית מלחמה ע"י חיפוש תורפות האויב או גרימתן.','שימוש באמצעים טכנולוגיים מתקדמים שאינם מוכרים לאויב.','ביצוע איגוף עמוק של כוחות האויב.'],correct:1},
@@ -471,356 +295,483 @@ const QUESTIONS=[
   {q:'מהי "הטעיה" בתכנית המבצע?',answers:['השארת פרטים עמומים בפקודה.','סדרת פעולות המטעות את האויב לגבי סד"כ, מקום וזמן הקרב הקונקרטי.','שקר למפקדים הממונים לגבי יכולות היחידה.','תקיפה חזיתית ללא תחכום.'],correct:1},
   {q:'כיצד עקרון ה"פשטות" משפיע על התחבולה?',answers:['תחבולה חייבת להיות מורכבת כדי להצליח.','פשטות התוכנית והשפה המשותפת מקלים על ביצוע שינויים ותחבולות בקרב.','עקרון הפשטות אוסר על שימוש בתחבולות.','פשטות נועדה רק לדרג הטקטי, ותחבולה רק לדרג המערכתי.'],correct:1},
   {q:'מהו תפקיד המודיעין במימוש התחבולה והאבטחה?',answers:['המודיעין הוא המענה החסכוני ביותר לאבטחה ומאפשר לדעת היכן לרכז מאמץ ולבצע תחבולה.','המודיעין רק מאשר את מה שהמפקד כבר החליט.','המודיעין מחליף את הצורך בסיור פיזי.','תפקיד המודיעין הוא לבצע את ההונאה בעצמו.'],correct:0},
-  {q:'מהו ההבדל המהותי בין "גישת השחיקה" ל"גישת התמרון"?',answers:['גישת השחיקה מתמקדת בהשמדת כוחות האויב בחזית, בעוד שגישת התמרון חותרת לפירוק המערכת היריבה כאשר פוגעים במרכז הכובד שלה.','גישת השחיקה היא תמיד הגנתית, בעוד שגישת התמרון היא תמיד התקפית.','גישת השחיקה מופעלת רק בלילה, בעוד שגישת התמרון מופעלת ביום.','אין הבדל בין הגישות.'],correct:0},
+  {q:'מה אפשר לומר על מרחב הלחימה ב"מלחמה בין המלחמות"?',answers:['מרחב הלחימה מוגבל לאזורים פיזיים בלבד.','מרחב הלחימה הורחב לממדים נוספים: מרחב התודעה, הסייבר, הרשתות החברתיות.','מרחב הלחימה התכווץ בשל ההסכמים הבינלאומיים.','הלחימה בין המלחמות מתבצעת אך ורק בזירה הדיפלומטית.'],correct:1},
   {q:'האם לאויב בלתי סדור יש מרכזי כובד?',answers:['כן, כל קבוצה יש לה הגיון פעולה שמכיל את כלל הרכיבים שלה (המערכת).','לא, לאויב בלתי סדור אין מרכז כובד – מרכז כובד זה לצבאות בלבד.','כן, מרכז כובד משתנה מארגון לארגון ויש להמשיג אותו בצורה אחרת.','תשובות א\' + ג\' נכונות.'],correct:3}
 ];
-const LETTERS=['א','ב','ג','ד'];
-const ANS_CLS=['a-c','b-c','c-c','d-c'];
-const P_COLORS=['#e91e63','#1565c0','#e65100','#00897b','#7b1fa2','#c62828','#283593','#00695c','#f57f17','#4e342e'];
-const AVATARS=['🦁','🐯','🦊','🐺','🦅','🐉','🦋','🐬','🦄','🐸'];
+
+const ANS_COLORS = ['#ef5350','#fb8c00','#43a047','#7b1fa2'];
+const ANS_EMOJIS = ['🔴','🟠','🟢','🟣'];
+const MEDALS = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+const AVATARS = ['🦁','🐯','🦊','🐺','🐻','🦅','🦁','🐲','🦜','🐬'];
 
 /* ================================================================ STATE */
-const ch = new BroadcastChannel('quiz-channel');
-let timePerQ   = 60;
-let currentQ   = 0;
-let gameState  = 'lobby';
-let timerInt   = null;
-let timeLeft   = 60;
-let players    = new Map();
-let qAnswers   = {};
-let colorCounter = 0;
+let db = null;
+let roomCode = '';
+let timePerQ = 60;
+let currentQ = 0;
+let timerInterval = null;
+let timeLeft = 0;
+let gamePhase = 'lobby'; // lobby/preview/active/ended/gameover
+let players = {}; // {pid: {name, score, online}}
+let answers = {}; // {qi: {pid: {answer, score}}}
+let questionDone = [];
+let dbListeners = {};
 
-/* ================================================================ CHANNEL */
-ch.onmessage = e => {
-  const d = e.data;
-  if (d.type==='PLAYER_JOIN')   handleJoin(d);
-  if (d.type==='PLAYER_ANSWER') handleAnswer(d);
-  if (d.type==='PING_REQUEST')  ch.postMessage({type:'ADMIN_PONG'});
+/* ================================================================ FIREBASE SETUP */
+window.connectFirebase = async function() {
+  const dburl = document.getElementById('inp-dburl').value.trim();
+  const apikey = document.getElementById('inp-apikey').value.trim();
+  const projectid = document.getElementById('inp-projectid').value.trim();
+  const errEl = document.getElementById('setup-error');
+  errEl.style.display = 'none';
+
+  if (!dburl || !apikey || !projectid) {
+    errEl.textContent = '❌ יש למלא את כל השדות';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const config = { apiKey: apikey, databaseURL: dburl, projectId: projectid };
+    localStorage.setItem('quiz_firebase_config', JSON.stringify(config));
+    await initDB(config);
+  } catch(e) {
+    errEl.textContent = '❌ שגיאה: ' + e.message;
+    errEl.style.display = 'block';
+  }
 };
 
-function handleJoin({pid, name}) {
-  if (!players.has(pid)) {
-    players.set(pid, {name, score:0, answers:{}, colorIdx: colorCounter++ % P_COLORS.length});
-  } else {
-    players.get(pid).name = name;
+window.useSavedConfig = async function() {
+  const saved = localStorage.getItem('quiz_firebase_config');
+  if (!saved) {
+    document.getElementById('setup-error').textContent = '❌ אין הגדרות שמורות. יש למלא את הפרטים.';
+    document.getElementById('setup-error').style.display = 'block';
+    return;
   }
-  refreshPlayerList();
-  updateTopBar();
-  if (gameState==='question_active') ch.postMessage({type:'QUESTION_START', qi:currentQ, timePerQ});
+  try {
+    const config = JSON.parse(saved);
+    // Pre-fill fields
+    if (config.databaseURL) document.getElementById('inp-dburl').value = config.databaseURL;
+    if (config.apiKey) document.getElementById('inp-apikey').value = config.apiKey;
+    if (config.projectId) document.getElementById('inp-projectid').value = config.projectId;
+    await initDB(config);
+  } catch(e) {
+    document.getElementById('setup-error').textContent = '❌ שגיאה בטעינת הגדרות שמורות.';
+    document.getElementById('setup-error').style.display = 'block';
+  }
+};
+
+async function initDB(config) {
+  const app = initializeApp(config, 'quiz-admin-' + Date.now());
+  db = getDatabase(app);
+
+  // Test connection
+  const testRef = ref(db, '.info/connected');
+  await new Promise((resolve, reject) => {
+    const unsub = onValue(testRef, (snap) => {
+      off(testRef);
+      if (snap.val() === true) resolve();
+      else reject(new Error('לא ניתן להתחבר לבסיס הנתונים'));
+    }, reject);
+  });
+
+  // Generate room code
+  roomCode = Math.random().toString(36).slice(2,8).toUpperCase();
+  document.getElementById('room-code-display').textContent = roomCode;
+  document.getElementById('setup-overlay').style.display = 'none';
+
+  // Init room in Firebase
+  await set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'lobby',
+    timePerQ: 60,
+    currentQ: 0,
+    questionStartTime: 0,
+    updatedAt: Date.now()
+  });
+
+  listenToPlayers();
+  listenToAnswers();
+  renderQList();
+  updateBtnStart();
 }
 
-function handleAnswer({pid, qi, ai, timeLeft: tl}) {
-  if (!qAnswers[qi]) qAnswers[qi]={};
-  if (qAnswers[qi][pid]) return;
-  qAnswers[qi][pid]={ai, timeLeft:tl};
-  const p=players.get(pid);
-  if (p) {
-    p.answers[qi]=ai;
-    if (ai===QUESTIONS[qi].correct) {
-      const pts=Math.max(200, Math.round((tl/timePerQ)*1000));
-      p.score+=pts;
+/* ================================================================ AUTO-LOAD SAVED CONFIG */
+const DEFAULT_CONFIG = {
+  apiKey:      'AIzaSyBJqZ8WZCHh93STOolZR9FDWgPGkHabink',
+  databaseURL: 'https://tachbula-quiz-7c607-default-rtdb.firebaseio.com',
+  projectId:   'tachbula-quiz-7c607',
+  appId:       '1:33165326980:web:2f1d3320a17c6e500d20d1'
+};
+
+window.addEventListener('load', async () => {
+  const saved = localStorage.getItem('quiz_firebase_config');
+  let c = DEFAULT_CONFIG;
+  if (saved) { try { c = {...DEFAULT_CONFIG, ...JSON.parse(saved)}; } catch(e){} }
+  document.getElementById('inp-dburl').value     = c.databaseURL || '';
+  document.getElementById('inp-apikey').value    = c.apiKey     || '';
+  document.getElementById('inp-projectid').value = c.projectId  || '';
+
+  // Auto-connect if config is complete
+  if (c.apiKey && c.databaseURL && c.projectId) {
+    try {
+      await initDB(c);
+      // overlay already hidden by initDB on success
+    } catch(e) {
+      // overlay stays visible so user can fix manually
+      document.getElementById('setup-error').textContent = '❌ שגיאת חיבור: ' + e.message;
+      document.getElementById('setup-error').style.display = 'block';
     }
   }
-  refreshResponseCounts();
-  refreshPlayerList();
+});
+
+/* ================================================================ LISTENERS */
+function listenToPlayers() {
+  const playersRef = ref(db, `rooms/${roomCode}/players`);
+  onValue(playersRef, (snap) => {
+    players = snap.val() || {};
+    renderPlayers();
+    updateBtnStart();
+    if (gamePhase === 'active') checkAllAnswered();
+  });
 }
 
-/* ================================================================ UI */
-function selectTime(t, btn) {
-  timePerQ=t;
-  document.querySelectorAll('.time-opt').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
+function listenToAnswers() {
+  const answersRef = ref(db, `rooms/${roomCode}/answers`);
+  onValue(answersRef, (snap) => {
+    answers = snap.val() || {};
+    if (gamePhase === 'active') {
+      updateAnswerStats();
+      checkAllAnswered();
+    }
+  });
 }
 
-function refreshPlayerList() {
-  const ul=document.getElementById('player-list');
-  if (!players.size){ul.innerHTML='<div class="players-empty">ממתין לחניכים...</div>';return;}
-  ul.innerHTML='';
-  [...players.values()].sort((a,b)=>b.score-a.score).forEach(p=>{
-    const done=p.answers[currentQ]!==undefined;
-    const div=document.createElement('div');
-    div.className='player-card'+(done?' answered':'');
-    div.innerHTML=`
-      <div class="p-avatar" style="background:${P_COLORS[p.colorIdx]};color:#fff">${AVATARS[p.colorIdx]}</div>
+/* ================================================================ RENDER */
+function renderPlayers() {
+  const list = document.getElementById('players-list');
+  const pids = Object.keys(players);
+  document.getElementById('player-count').textContent = pids.length + ' חניכים';
+  if (!pids.length) { list.innerHTML = '<div class="players-empty">ממתין לחניכים...</div>'; return; }
+
+  const curAnswers = answers[currentQ] || {};
+  list.innerHTML = pids.map((pid, i) => {
+    const p = players[pid];
+    const answered = !!curAnswers[pid];
+    return `<div class="player-card ${answered ? 'answered' : ''}">
+      <div class="p-avatar" style="background:${ANS_COLORS[i%4]}22;font-size:1.2rem">${AVATARS[i%AVATARS.length]}</div>
       <div class="p-info">
-        <div class="p-name">${p.name}</div>
-        <div class="p-score">${p.score.toLocaleString()} נק'</div>
+        <div class="p-name">${esc(p.name||'חניך')}</div>
+        <div class="p-score">${(p.score||0).toLocaleString()} נקודות</div>
       </div>
-      <span class="p-badge ${done?'badge-answered':'badge-waiting'}">${done?'✓ ענה':'...'}</span>`;
-    ul.appendChild(div);
+      <span class="p-badge ${answered ? 'badge-answered' : 'badge-waiting'}">${answered ? '✓ ענה' : 'ממתין'}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderQList() {
+  const list = document.getElementById('q-list');
+  list.innerHTML = QUESTIONS.map((q, i) => {
+    const cls = questionDone[i] ? 'done-q' : (i === currentQ && gamePhase !== 'lobby' ? 'active-q' : '');
+    const badgeCls = questionDone[i] ? 'done' : (i === currentQ && gamePhase !== 'lobby' ? 'active' : '');
+    return `<div class="q-list-item ${cls}">
+      <div class="q-num-badge ${badgeCls}">${questionDone[i]?'✓':i+1}</div>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${q.q.slice(0,40)}...</span>
+    </div>`;
+  }).join('');
+}
+
+function renderAnswerCards(dimmed) {
+  const q = QUESTIONS[currentQ];
+  const curAnswers = answers[currentQ] || {};
+  const totalAnswers = Object.keys(curAnswers).length;
+  const votes = [0,0,0,0];
+  Object.values(curAnswers).forEach(a => { if (a.answer >= 0 && a.answer <= 3) votes[a.answer]++; });
+
+  const letters = ['א','ב','ג','ד'];
+  document.getElementById('ans-grid').innerHTML = q.answers.map((ans, i) => {
+    const pct = totalAnswers ? Math.round(votes[i]/totalAnswers*100) : 0;
+    const isCorrect = gamePhase === 'ended' && i === q.correct;
+    return `<div class="ans-card c${i} ${dimmed?'dimmed':''} ${isCorrect?'correct-ans':''}">
+      <div class="ans-letter" style="color:${ANS_COLORS[i]}">${ANS_EMOJIS[i]} תשובה ${letters[i]}</div>
+      <div class="ans-text">${esc(ans)}</div>
+      <div class="vote-bar-wrap"><div class="vote-bar" style="width:${pct}%;background:${ANS_COLORS[i]}"></div></div>
+      <div class="vote-count">${votes[i]} קולות <span class="vote-pct">${pct}%</span></div>
+    </div>`;
+  }).join('');
+}
+
+function updateAnswerStats() {
+  const curAnswers = answers[currentQ] || {};
+  const q = QUESTIONS[currentQ];
+  const pids = Object.keys(players);
+  const answered = Object.keys(curAnswers).length;
+  let correct = 0, wrong = 0;
+  Object.values(curAnswers).forEach(a => {
+    if (a.answer === q.correct) correct++; else wrong++;
   });
-  document.getElementById('lobby-player-count').textContent=players.size;
-}
-
-function updateTopBar() {
-  document.getElementById('player-count-top').textContent=`${players.size} חניכים מחוברים`;
-}
-
-function buildQuestionList() {
-  document.getElementById('q-list-title').style.display='block';
-  const list=document.getElementById('q-list');
-  list.innerHTML='';
-  QUESTIONS.forEach((q,i)=>{
-    const div=document.createElement('div');
-    div.className='q-list-item'+(i===currentQ?' active-q':i<currentQ?' done-q':'');
-    div.id='qli-'+i;
-    div.innerHTML=`<div class="q-num-badge ${i<currentQ?'done':i===currentQ?'active':''}">${i+1}</div>
-      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${q.q.substring(0,28)}...</span>`;
-    div.onclick=()=>{ if(gameState==='question_ended') jumpToQuestion(i); };
-    list.appendChild(div);
-  });
-}
-
-function refreshQuestionListHighlight() {
-  document.querySelectorAll('.q-list-item').forEach((el,i)=>{
-    el.className='q-list-item'+(i===currentQ?' active-q':i<currentQ?' done-q':'');
-    const b=el.querySelector('.q-num-badge');
-    if(b) b.className='q-num-badge'+(i===currentQ?' active':i<currentQ?' done':'');
-  });
-}
-
-function refreshResponseCounts() {
-  const ans=qAnswers[currentQ]||{};
-  const total=players.size;
-  const count=Object.keys(ans).length;
-  const correct=Object.values(ans).filter(a=>a.ai===QUESTIONS[currentQ].correct).length;
-  document.getElementById('resp-count').textContent=count;
-  document.getElementById('resp-correct').textContent=correct;
-  document.getElementById('resp-wrong').textContent=count-correct;
-  document.getElementById('resp-total').textContent=total;
-  for(let i=0;i<4;i++){
-    const bar=document.getElementById('vbar-'+i);
-    const cnt=document.getElementById('vcnt-'+i);
-    if(!bar||!cnt) continue;
-    const n=Object.values(ans).filter(a=>a.ai===i).length;
-    bar.style.width=total>0?(n/total*100)+'%':'0%';
-    cnt.textContent=n>0?n:'';
-  }
-  if(count>=total&&total>0&&gameState==='question_active'){
-    clearTimeout(window._autoEnd);
-    window._autoEnd=setTimeout(endQuestion,1500);
-  }
-}
-
-/* ================================================================ GAME FLOW */
-function startGame() {
-  gameState='question_active'; currentQ=0; qAnswers={};
-  players.forEach(p=>{p.score=0;p.answers={};});
-  buildQuestionList();
-  document.getElementById('view-lobby').style.display='none';
-  document.getElementById('view-question').style.display='block';
-  setStateChip('active');
-  showQuestion();
-}
-
-/* Load question in PREVIEW mode – admin sees it, players wait */
-function showQuestion() {
-  gameState='question_preview';
-  const q=QUESTIONS[currentQ];
-
-  document.getElementById('q-ctrl-label').textContent=`${currentQ+1} / ${QUESTIONS.length}`;
-  document.getElementById('q-box-num').textContent=`שאלה ${currentQ+1}`;
-  document.getElementById('q-box-text').textContent=q.q;
-  document.getElementById('q-status-label').textContent='תצוגה מקדימה 👁';
-  document.getElementById('q-status-label').style.color='#ff6f00';
-  document.getElementById('lb-section').style.display='none';
-  document.getElementById('preview-banner').className='preview-banner show';
-
-  // Show/hide buttons for preview state
-  document.getElementById('btn-show-q').style.display='inline-block';
-  document.getElementById('btn-skip').style.display='none';
-  document.getElementById('btn-end-q').style.display='none';
-  document.getElementById('btn-next-q').style.display='none';
-  document.getElementById('btn-finish-game').style.display='none';
-
-  // Reset timer display (not counting yet)
-  const tel=document.getElementById('ctrl-timer');
-  tel.textContent=timePerQ; tel.className='timer-number';
-  const bar=document.getElementById('ctrl-timer-bar');
-  bar.style.animation='none'; void bar.offsetHeight;
-  bar.style.width='100%';
-
-  // Build answer cards (no vote bars yet)
-  const grid=document.getElementById('ans-grid');
-  grid.innerHTML='';
-  q.answers.forEach((ans,i)=>{
-    const div=document.createElement('div');
-    div.className=`ans-card ${ANS_CLS[i]}`;
-    div.style.opacity='.75';
-    div.innerHTML=`
-      <div class="ans-ltr">${LETTERS[i]}</div>
-      <span class="ans-text-content">${ans}</span>
-      <span class="ans-vote-count" id="vcnt-${i}"></span>
-      <div class="ans-vote-bar" id="vbar-${i}" style="width:0%"></div>`;
-    grid.appendChild(div);
-  });
-  refreshResponseCounts();
-  refreshQuestionListHighlight();
-
-  // Tell players to show waiting screen
-  ch.postMessage({type:'QUESTION_PREVIEW', qi:currentQ});
-}
-
-/* Admin clicks "הצג שאלה לחניכים" – timer starts, players see question */
-function showQuestionToPlayers() {
-  gameState='question_active';
-
-  document.getElementById('preview-banner').className='preview-banner';
-  document.getElementById('btn-show-q').style.display='none';
-  document.getElementById('btn-skip').style.display='inline-block';
-  document.getElementById('btn-end-q').style.display='inline-block';
-  document.getElementById('q-status-label').textContent='פעיל ⏳';
-  document.getElementById('q-status-label').style.color='#1565c0';
-
-  // Make answer cards fully visible
-  document.querySelectorAll('.ans-card').forEach(c=>c.style.opacity='1');
-
-  // Start timer
-  timeLeft=timePerQ;
-  const tel=document.getElementById('ctrl-timer');
-  tel.textContent=timePerQ; tel.className='timer-number';
-  const bar=document.getElementById('ctrl-timer-bar');
-  bar.style.animation='none'; void bar.offsetHeight;
-  bar.style.animationDuration=timePerQ+'s';
-  bar.style.animation=`timerShrink ${timePerQ}s linear forwards`;
-
-  clearInterval(timerInt);
-  timerInt=setInterval(()=>{
-    timeLeft--;
-    tel.textContent=timeLeft;
-    if(timeLeft<=5) tel.className='timer-number urgent';
-    if(timeLeft<=0){ clearInterval(timerInt); endQuestion(); }
-  },1000);
-
-  // NOW broadcast to players
-  ch.postMessage({type:'QUESTION_START', qi:currentQ, timePerQ});
-}
-
-function endQuestion() {
-  clearInterval(timerInt);
-  if(gameState==='question_ended') return;
-  gameState='question_ended';
-
-  const q=QUESTIONS[currentQ];
-  document.querySelectorAll('.ans-card').forEach((c,i)=>{
-    if(i===q.correct) c.classList.add('correct-ans');
-  });
-
-  document.getElementById('ctrl-timer').textContent='✓';
-  document.getElementById('ctrl-timer').className='timer-number';
-  document.getElementById('q-status-label').textContent='סגור ✓';
-  document.getElementById('q-status-label').style.color='#00897b';
-  document.getElementById('btn-end-q').style.display='none';
-  document.getElementById('btn-skip').style.display='none';
-
-  const isLast=currentQ>=QUESTIONS.length-1;
-  document.getElementById('btn-next-q').style.display=isLast?'none':'inline-block';
-  document.getElementById('btn-finish-game').style.display=isLast?'inline-block':'none';
-
-  ch.postMessage({type:'QUESTION_END', qi:currentQ, correctIndex:q.correct, scores:getScores()});
-  showLeaderboard();
+  document.getElementById('stat-answered').textContent = answered;
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('stat-total').textContent = pids.length;
+  renderAnswerCards(gamePhase === 'preview');
 }
 
 function showLeaderboard() {
-  const el=document.getElementById('lb-section');
-  el.style.display='block';
-  const rows=document.getElementById('lb-rows');
-  rows.innerHTML='';
-  [...players.values()].sort((a,b)=>b.score-a.score).slice(0,5).forEach((p,ri)=>{
-    const cls=ri===0?'r1':ri===1?'r2':ri===2?'r3':'rn';
-    const row=document.createElement('div');
-    row.className='lb-row'; row.style.animationDelay=(ri*0.07)+'s';
-    const gotIt=p.answers[currentQ]===QUESTIONS[currentQ].correct;
-    row.innerHTML=`
-      <div class="lb-rank ${cls}">${ri+1}</div>
-      <div class="lb-name">${p.name}</div>
-      <div class="lb-correct">${gotIt?'✅':''}</div>
-      <div class="lb-pts">${p.score.toLocaleString()} נק'</div>`;
-    rows.appendChild(row);
+  const sorted = Object.entries(players)
+    .map(([pid, p]) => ({name: p.name||'חניך', score: p.score||0}))
+    .sort((a,b) => b.score - a.score)
+    .slice(0, 5);
+
+  document.getElementById('lb-rows').innerHTML = sorted.map((p, i) =>
+    `<div class="lb-row rank-${i+1}">
+      <div class="lb-medal">${MEDALS[i]||''}</div>
+      <div class="lb-name">${esc(p.name)}</div>
+      <div class="lb-pts">${p.score.toLocaleString()}</div>
+    </div>`
+  ).join('') || '<div style="color:#bbb;text-align:center;padding:12px">אין שחקנים עדיין</div>';
+
+  document.getElementById('lb-section').style.display = 'block';
+}
+
+function showFinalLeaderboard() {
+  const sorted = Object.entries(players)
+    .map(([pid, p]) => ({name: p.name||'חניך', score: p.score||0}))
+    .sort((a,b) => b.score - a.score);
+
+  document.getElementById('final-lb-rows').innerHTML = sorted.map((p, i) =>
+    `<div class="lb-row rank-${i+1}">
+      <div class="lb-medal">${MEDALS[i]||'  '}</div>
+      <div class="lb-name">${esc(p.name)}</div>
+      <div class="lb-pts">${p.score.toLocaleString()}</div>
+    </div>`
+  ).join('') || '<div style="color:#bbb;text-align:center;padding:12px">אין שחקנים</div>';
+}
+
+/* ================================================================ GAME FLOW */
+function updateBtnStart() {
+  const btn = document.getElementById('btn-start');
+  btn.disabled = Object.keys(players).length === 0;
+}
+
+window.setTime = function(t) {
+  timePerQ = t;
+  document.querySelectorAll('.time-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.textContent) === t);
   });
-}
+};
 
-function nextQuestion() {
-  currentQ++;
-  if(!qAnswers[currentQ]) qAnswers[currentQ]={};
+window.startGame = function() {
+  if (!db) return;
+  answers = {};
+  questionDone = new Array(QUESTIONS.length).fill(false);
+  currentQ = 0;
+  gamePhase = 'preview';
   showQuestion();
+};
+
+function showQuestion() {
+  const q = QUESTIONS[currentQ];
+  gamePhase = 'preview';
+
+  // Update UI
+  document.getElementById('view-lobby').style.display = 'none';
+  document.getElementById('view-question').style.display = 'block';
+  document.getElementById('view-final').style.display = 'none';
+  document.getElementById('preview-banner').style.display = 'block';
+  document.getElementById('q-label').textContent = `שאלה ${currentQ+1} מתוך ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-card').classList.add('dimmed');
+  document.getElementById('big-timer').textContent = timePerQ;
+  document.getElementById('big-timer').classList.remove('urgent');
+  document.getElementById('timer-bar').style.width = '100%';
+  document.getElementById('lb-section').style.display = 'none';
+  renderAnswerCards(true);
+
+  // Reset stats
+  document.getElementById('stat-answered').textContent = '0';
+  document.getElementById('stat-correct').textContent = '0';
+  document.getElementById('stat-wrong').textContent = '0';
+  document.getElementById('stat-total').textContent = Object.keys(players).length;
+
+  // Buttons
+  document.getElementById('btn-show').style.display = 'flex';
+  document.getElementById('btn-end').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('btn-finish').style.display = 'none';
+  document.getElementById('btn-skip').style.display = 'flex';
+
+  // Chip
+  document.getElementById('state-chip').textContent = 'בוחן פעיל';
+  document.getElementById('state-chip').className = 'state-chip active';
+
+  // Firebase: send preview to players
+  set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'preview',
+    currentQ,
+    timePerQ,
+    questionStartTime: 0,
+    updatedAt: Date.now()
+  });
+
+  renderQList();
 }
 
-function skipQuestion() {
-  if(gameState!=='question_active') return;
-  clearInterval(timerInt);
-  ch.postMessage({type:'QUESTION_SKIP', qi:currentQ});
-  if(currentQ<QUESTIONS.length-1){ currentQ++; showQuestion(); }
-  else finishGame();
-}
+window.showQuestionToPlayers = function() {
+  gamePhase = 'active';
+  const startTime = Date.now();
+  timeLeft = timePerQ;
 
-function jumpToQuestion(qi) {
-  currentQ=qi;
-  if(!qAnswers[qi]) qAnswers[qi]={};
-  showQuestion();
-}
+  document.getElementById('preview-banner').style.display = 'none';
+  document.getElementById('q-card').classList.remove('dimmed');
+  document.getElementById('btn-show').style.display = 'none';
+  document.getElementById('btn-end').style.display = 'flex';
+  document.getElementById('btn-skip').style.display = 'none';
+  renderAnswerCards(false);
 
-function finishGame() {
-  clearInterval(timerInt);
-  gameState='game_over';
-  ch.postMessage({type:'GAME_END', scores:getScores()});
-  document.getElementById('view-question').style.display='none';
-  document.getElementById('view-final').style.display='block';
-  setStateChip('done');
+  // Firebase: start question for players
+  set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'active',
+    currentQ,
+    timePerQ,
+    questionStartTime: startTime,
+    updatedAt: Date.now()
+  });
 
-  const sorted=[...players.values()].sort((a,b)=>b.score-a.score);
-  const winner=sorted[0];
-  document.getElementById('final-sub').textContent=`${players.size} חניכים | ${QUESTIONS.length} שאלות`;
+  // Timer
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - startTime) / 1000;
+    timeLeft = Math.max(0, timePerQ - elapsed);
+    const pct = (timeLeft / timePerQ) * 100;
+    document.getElementById('big-timer').textContent = Math.ceil(timeLeft);
+    document.getElementById('timer-bar').style.width = pct + '%';
+    document.getElementById('big-timer').classList.toggle('urgent', timeLeft <= 5);
+    if (timeLeft <= 0) { clearInterval(timerInterval); endQuestion(); }
+  }, 200);
+};
 
-  if(winner){
-    const wCorrect=Object.entries(winner.answers).filter(([qi,ai])=>ai===QUESTIONS[+qi]?.correct).length;
-    document.getElementById('winner-card').innerHTML=`
-      <div class="winner-emoji">🥇</div>
-      <div class="winner-name">${winner.name}</div>
-      <div class="winner-score">${winner.score.toLocaleString()} נקודות | ${wCorrect}/${QUESTIONS.length} נכון</div>`;
+window.endQuestion = async function() {
+  if (gamePhase === 'ended') return;
+  gamePhase = 'ended';
+  clearInterval(timerInterval);
+
+  document.getElementById('btn-end').style.display = 'none';
+  document.getElementById('btn-skip').style.display = 'none';
+  document.getElementById('btn-show').style.display = 'none';
+  document.getElementById('big-timer').classList.remove('urgent');
+
+  // Calc scores for answers
+  const curAnswers = answers[currentQ] || {};
+  const q = QUESTIONS[currentQ];
+  const updates = {};
+  for (const [pid, ans] of Object.entries(curAnswers)) {
+    if (ans.answer === q.correct) {
+      const timeBonus = Math.max(200, Math.round(((timePerQ*1000 - (ans.timeMs||0)) / (timePerQ*1000)) * 1000));
+      const addedScore = timeBonus;
+      const currentScore = (players[pid]?.score || 0);
+      const newScore = currentScore + addedScore;
+      updates[`rooms/${roomCode}/players/${pid}/score`] = newScore;
+      updates[`rooms/${roomCode}/answers/${currentQ}/${pid}/score`] = addedScore;
+    }
   }
+  if (Object.keys(updates).length > 0) await update(ref(db), updates);
 
-  const fl=document.getElementById('final-lb');
-  fl.innerHTML='';
-  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
-  sorted.forEach((p,ri)=>{
-    const correctCount=Object.entries(p.answers).filter(([qi,ai])=>ai===QUESTIONS[+qi]?.correct).length;
-    const row=document.createElement('div');
-    row.className='lb-row'; row.style.animationDelay=(ri*0.08)+'s';
-    row.innerHTML=`
-      <div style="font-size:1.3rem;width:36px;text-align:center">${medals[ri]||''}</div>
-      <div class="lb-name">${p.name}</div>
-      <div class="lb-correct">✅ ${correctCount}/${QUESTIONS.length}</div>
-      <div class="lb-pts">${p.score.toLocaleString()}</div>`;
-    fl.appendChild(row);
+  // Firebase: end question
+  set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'ended',
+    currentQ,
+    timePerQ,
+    correctAnswer: q.correct,
+    questionStartTime: 0,
+    updatedAt: Date.now()
   });
+
+  questionDone[currentQ] = true;
+  renderQList();
+  renderAnswerCards(false);
+  showLeaderboard();
+
+  // Show correct buttons
+  const isLast = currentQ >= QUESTIONS.length - 1;
+  if (isLast) {
+    document.getElementById('btn-finish').style.display = 'flex';
+  } else {
+    document.getElementById('btn-next').style.display = 'flex';
+  }
+};
+
+function checkAllAnswered() {
+  if (gamePhase !== 'active') return;
+  const curAnswers = answers[currentQ] || {};
+  const pids = Object.keys(players);
+  if (pids.length > 0 && Object.keys(curAnswers).length >= pids.length) {
+    setTimeout(() => { if (gamePhase === 'active') endQuestion(); }, 1500);
+  }
 }
 
-function getScores() {
-  const out={};
-  players.forEach((p,pid)=>{ out[pid]={name:p.name,score:p.score}; });
-  return out;
-}
+window.nextQuestion = function() {
+  currentQ++;
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('lb-section').style.display = 'none';
+  showQuestion();
+};
 
-function newGame() {
-  players.forEach(p=>{p.score=0;p.answers={};});
-  currentQ=0; qAnswers={};
-  document.getElementById('view-final').style.display='none';
-  document.getElementById('view-lobby').style.display='flex';
-  refreshPlayerList();
-  gameState='lobby';
-  setStateChip('lobby');
-  ch.postMessage({type:'RESET'});
-}
+window.skipQuestion = function() {
+  questionDone[currentQ] = true;
+  if (currentQ >= QUESTIONS.length - 1) { finishGame(); return; }
+  currentQ++;
+  showQuestion();
+};
 
-function setStateChip(state) {
-  const chip=document.getElementById('game-state-chip');
-  if(state==='lobby')  { chip.textContent='ממתין'; chip.className='state-chip'; }
-  if(state==='active') { chip.textContent='בוחן פעיל'; chip.className='state-chip active'; }
-  if(state==='done')   { chip.textContent='הסתיים'; chip.className='state-chip done'; }
-}
+window.finishGame = function() {
+  gamePhase = 'gameover';
+  clearInterval(timerInterval);
 
-setInterval(()=>ch.postMessage({type:'ADMIN_ALIVE'}), 2000);
+  document.getElementById('view-question').style.display = 'none';
+  document.getElementById('view-final').style.display = 'block';
+
+  document.getElementById('state-chip').textContent = 'הסתיים';
+  document.getElementById('state-chip').className = 'state-chip done';
+
+  set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'gameover',
+    updatedAt: Date.now()
+  });
+
+  showFinalLeaderboard();
+};
+
+window.newGame = function() {
+  gamePhase = 'lobby';
+  currentQ = 0;
+  questionDone = [];
+  answers = {};
+
+  document.getElementById('view-final').style.display = 'none';
+  document.getElementById('view-lobby').style.display = 'flex';
+  document.getElementById('state-chip').textContent = 'ממתין';
+  document.getElementById('state-chip').className = 'state-chip';
+
+  // Reset scores in Firebase
+  const pids = Object.keys(players);
+  const updates = {};
+  pids.forEach(pid => { updates[`rooms/${roomCode}/players/${pid}/score`] = 0; });
+  if (Object.keys(updates).length) update(ref(db), updates);
+
+  // Clear old answers
+  set(ref(db, `rooms/${roomCode}/answers`), null);
+
+  set(ref(db, `rooms/${roomCode}/state`), {
+    status: 'lobby',
+    timePerQ,
+    currentQ: 0,
+    questionStartTime: 0,
+    updatedAt: Date.now()
+  });
+};
+
+/* ================================================================ UTILS */
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
