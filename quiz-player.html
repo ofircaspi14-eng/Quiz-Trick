@@ -7,304 +7,320 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:'Heebo',Arial,sans-serif;
-  background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 50%,#fce4ec 100%);
-  color:#1a1a2e;min-height:100vh;
+body{font-family:'Heebo',Arial,sans-serif;background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 50%,#fce4ec 100%);color:#1a1a2e;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+
+.screen{width:100%;max-width:480px;display:none}
+.screen.active{display:block}
+
+/* JOIN */
+#screen-join{text-align:center}
+.logo-title{font-size:2rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#ff6f00,#1565c0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.logo-sub{font-size:.9rem;color:#888;margin-bottom:32px}
+.join-card{background:#fff;border-radius:22px;padding:28px 28px;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.join-card h2{font-size:1.2rem;font-weight:900;margin-bottom:20px;color:#1a1a2e}
+.field{margin-bottom:16px;text-align:right}
+.field label{display:block;font-size:.82rem;font-weight:700;color:#666;margin-bottom:6px}
+.field input{width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:14px;font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;transition:border .2s;background:#fafafa}
+.field input:focus{outline:none;border-color:#1565c0;background:#fff}
+.room-input{text-align:center!important;letter-spacing:6px;font-size:1.4rem!important;text-transform:uppercase}
+.btn-join{width:100%;padding:16px;background:linear-gradient(135deg,#e91e63,#c2185b);color:#fff;border:none;border-radius:16px;font-family:'Heebo',sans-serif;font-size:1.1rem;font-weight:900;cursor:pointer;transition:all .2s;margin-top:6px;box-shadow:0 4px 16px rgba(233,30,99,.35)}
+.btn-join:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(233,30,99,.45)}
+.btn-join:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.join-error{color:#e53935;font-size:.82rem;margin-top:10px;display:none}
+.config-section{margin-top:20px;background:#fff3e0;border:2px solid #ff9800;border-radius:14px;padding:14px 16px;text-align:right}
+.config-section summary{font-weight:700;font-size:.88rem;color:#e65100;cursor:pointer;padding:2px 0}
+.config-field{margin-top:10px}
+.config-field label{font-size:.78rem;font-weight:700;color:#666;display:block;margin-bottom:4px}
+.config-field input{width:100%;padding:9px 12px;border:1.5px solid #e0e0e0;border-radius:10px;font-family:'Heebo',sans-serif;font-size:.82rem;direction:ltr}
+.btn-save-config{margin-top:10px;width:100%;padding:10px;background:#ff9800;color:#fff;border:none;border-radius:10px;font-family:'Heebo',sans-serif;font-weight:700;cursor:pointer;font-size:.88rem}
+
+/* WAITING */
+#screen-waiting{text-align:center;padding:20px 0}
+.wait-avatar{font-size:4rem;margin-bottom:12px;animation:bounce 1.5s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.wait-title{font-size:1.3rem;font-weight:900;color:#1a1a2e;margin-bottom:8px}
+.wait-sub{font-size:.9rem;color:#888;line-height:1.6}
+.admin-status{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:8px 18px;border-radius:20px;font-size:.82rem;font-weight:700;background:#e8f5e9;color:#2e7d32}
+.admin-status.off{background:#fce4ec;color:#c2185b}
+.status-dot-sm{width:8px;height:8px;border-radius:50%;background:#4caf50;animation:pulseDot 1.5s infinite}
+.admin-status.off .status-dot-sm{background:#e53935;animation:none}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* QUESTION */
+#screen-question{padding-bottom:20px}
+.q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.q-progress{font-size:.8rem;color:#888;font-weight:700}
+.player-name-chip{font-size:.78rem;font-weight:800;padding:4px 12px;border-radius:20px;background:#e3f2fd;color:#1565c0}
+.timer-container{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:12px;text-align:center}
+.player-timer{font-size:3.5rem;font-weight:900;color:#1565c0;line-height:1;transition:color .3s}
+.player-timer.urgent{color:#e53935;animation:timerPulse .5s ease-in-out infinite}
+@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.timer-progress{height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;margin-top:8px}
+.timer-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#4caf50,#ff9800);transition:width .3s linear}
+.q-card{background:#fff;border-radius:18px;padding:18px 20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:14px;border-right:5px solid #1565c0}
+.q-text{font-size:1.05rem;font-weight:800;color:#1a1a2e;line-height:1.5}
+.answers-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ans-btn{padding:16px 14px;border:none;border-radius:16px;font-family:'Heebo',sans-serif;font-size:.92rem;font-weight:800;cursor:pointer;transition:all .18s;color:#fff;text-align:center;line-height:1.3}
+.ans-btn:active{transform:scale(.97)}
+.ans-btn.a0{background:linear-gradient(135deg,#ef5350,#b71c1c)}
+.ans-btn.a1{background:linear-gradient(135deg,#fb8c00,#e65100)}
+.ans-btn.a2{background:linear-gradient(135deg,#43a047,#1b5e20)}
+.ans-btn.a3{background:linear-gradient(135deg,#7b1fa2,#4a148c)}
+.ans-btn:disabled{cursor:default;opacity:.7}
+.ans-btn.selected{transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.ans-btn.reveal-correct{animation:correctPop .5s ease;box-shadow:0 6px 24px rgba(76,175,80,.5);border:3px solid #4caf50}
+.ans-btn.wrong{opacity:.5;filter:grayscale(.5)}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1.04)}}
+.ans-letter{font-size:.72rem;opacity:.85;display:block;margin-bottom:3px}
+.answered-msg{background:#e8f5e9;border-radius:14px;padding:12px;text-align:center;margin-top:10px;font-size:.88rem;font-weight:700;color:#2e7d32;display:none}
+
+/* LEADERBOARD */
+#screen-lb{text-align:center;padding:10px 0}
+.lb-title{font-size:1.3rem;font-weight:900;color:#1a1a2e;margin-bottom:16px}
+.lb-card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px}
+.lb-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;margin-bottom:6px;background:#f8f9ff}
+.lb-row.rank-1{background:linear-gradient(135deg,#fff8e1,#fffde7);border:2px solid #ffd54f}
+.lb-row.rank-2{background:linear-gradient(135deg,#f5f5f5,#eeeeee);border:2px solid #bdbdbd}
+.lb-row.rank-3{background:linear-gradient(135deg,#fbe9e7,#fff3e0);border:2px solid #ffab91}
+.lb-row.highlight{border:2px solid #1565c0!important;background:linear-gradient(135deg,#e3f2fd,#bbdefb)!important}
+.lb-medal{font-size:1.3rem;width:28px;text-align:center;flex-shrink:0}
+.lb-name{flex:1;font-weight:800;font-size:.9rem;color:#1a1a2e}
+.lb-pts{font-weight:900;font-size:.95rem;color:#e91e63}
+.my-result{border-radius:16px;padding:16px;margin-bottom:16px;text-align:center;font-weight:800}
+.my-result.correct{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:2px solid #4caf50;color:#1b5e20}
+.my-result.wrong{background:linear-gradient(135deg,#fce4ec,#f8bbd0);border:2px solid #e91e63;color:#880e4f}
+.my-result.timeout{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:2px solid #ff9800;color:#e65100}
+.result-icon{font-size:2.5rem;display:block;margin-bottom:6px}
+.result-pts{font-size:1.4rem;font-weight:900;margin-top:4px}
+.wait-next{font-size:.85rem;color:#aaa;margin-top:12px;animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* FINAL */
+#screen-final{text-align:center;padding:20px 0}
+.final-emoji{font-size:4rem;margin-bottom:12px;animation:bounce 1.5s ease-in-out infinite}
+.final-title{font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,#e91e63,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+.final-sub{font-size:.9rem;color:#888;margin-bottom:24px}
+.my-final-score{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);margin-bottom:16px}
+.my-rank{font-size:2.5rem;font-weight:900;color:#e91e63}
+.my-score-val{font-size:1.8rem;font-weight:900;color:#1565c0;margin-top:6px}
+.my-score-label{font-size:.85rem;color:#888}
+.progress-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;background:#e0e0e0}
+.dot.ok{background:#4caf50}
+
+/* ============================================================ STICKER POPUP */
+#sticker-overlay{
+  position:fixed;inset:0;z-index:9999;
   display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
 }
-
-.screen{display:none;width:100%;max-width:800px;padding:20px;animation:fadeIn .35s ease}
-.screen.active{display:flex;flex-direction:column;align-items:center}
-@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
-@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@keyframes timerShrink{from{width:100%}to{width:0%}}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-
-/* ===== JOIN ===== */
-.join-logo{
-  font-size:2.6rem;font-weight:900;
-  background:linear-gradient(135deg,#e91e63,#ff6f00,#1565c0);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  text-align:center;margin-bottom:6px;
-}
-.join-sub{color:#666;font-size:.95rem;margin-bottom:28px;text-align:center}
-.join-card{
-  background:#fff;border-radius:22px;padding:36px 40px;
-  width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.1);
+.sticker-popup{
+  display:none;
   text-align:center;
+  transform:rotate(-4deg) scale(0);
+  animation:stickerIn .45s cubic-bezier(.34,1.56,.64,1) forwards;
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.45));
 }
-.join-card h2{font-size:1.3rem;color:#1a1a2e;margin-bottom:6px}
-.join-card p{color:#888;font-size:.88rem;margin-bottom:24px}
-.inp-name{
-  width:100%;padding:14px 18px;border-radius:14px;
-  border:2px solid #e0e0e0;background:#f9f9f9;
-  font-size:1.15rem;font-family:'Heebo',Arial,sans-serif;
-  color:#1a1a2e;text-align:center;outline:none;
-  margin-bottom:16px;transition:border-color .2s;
+.sticker-popup.show{display:block}
+@keyframes stickerIn{
+  0%{transform:rotate(-4deg) scale(0);opacity:0}
+  60%{transform:rotate(-2deg) scale(1.12);opacity:1}
+  100%{transform:rotate(-3deg) scale(1);opacity:1}
 }
-.inp-name:focus{border-color:#e91e63;background:#fff}
-.btn-join{
-  width:100%;padding:15px;border-radius:14px;border:none;
-  background:linear-gradient(135deg,#e91e63,#c2185b);
-  color:#fff;font-size:1.15rem;font-weight:900;
-  cursor:pointer;font-family:'Heebo',Arial,sans-serif;
-  transition:transform .15s,box-shadow .15s;
+@keyframes stickerOut{
+  0%{transform:rotate(-3deg) scale(1);opacity:1}
+  100%{transform:rotate(-6deg) scale(.7);opacity:0}
 }
-.btn-join:hover{transform:scale(1.03);box-shadow:0 6px 24px rgba(233,30,99,.4)}
+.sticker-popup.hide{animation:stickerOut .3s ease forwards}
 
-/* ===== WAITING ===== */
-.waiting-wrap{text-align:center}
-.wait-avatar{
-  font-size:5rem;margin-bottom:16px;
-  animation:pulse 2s ease-in-out infinite;
+/* sticker inner card */
+.stk-card{
+  position:relative;border-radius:22px;padding:22px 34px 18px;
+  min-width:220px;
 }
-.wait-name{font-size:2rem;font-weight:900;margin-bottom:8px}
-.wait-msg{font-size:1.05rem;color:#777;margin-bottom:24px}
-.wait-dots{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
-.dot-anim{
-  width:12px;height:12px;border-radius:50%;background:#e91e63;
-  animation:pulse 1.2s ease-in-out infinite;
+/* diagonal stripes bg (like בחרת נכון!) */
+.stk-card.correct-stk{
+  background:repeating-linear-gradient(
+    -45deg,
+    #1a1a1a 0px, #1a1a1a 28px,
+    #2e7d32 28px, #2e7d32 56px
+  );
+  border:4px solid #fff;
 }
-.dot-anim:nth-child(2){animation-delay:.2s;background:#2196f3}
-.dot-anim:nth-child(3){animation-delay:.4s;background:#ff6f00}
-.admin-status{
-  display:inline-block;padding:8px 20px;border-radius:20px;
-  font-size:.8rem;font-weight:700;
+.stk-card.wrong-stk{
+  background:repeating-linear-gradient(
+    -45deg,
+    #1a1a1a 0px, #1a1a1a 28px,
+    #6d1a1a 28px, #6d1a1a 56px
+  );
+  border:4px solid #fff;
 }
-.admin-online{background:#e8f5e9;color:#2e7d32}
-.admin-offline{background:#fff3e0;color:#e65100}
-
-/* ===== QUESTION ===== */
-.q-topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  background:#fff;border-radius:16px;padding:12px 20px;
-  width:100%;margin-bottom:10px;
-  box-shadow:0 2px 12px rgba(0,0,0,.07);
+.stk-card.timeout-stk{
+  background:repeating-linear-gradient(
+    -45deg,
+    #1a1a1a 0px, #1a1a1a 28px,
+    #5d4037 28px, #5d4037 56px
+  );
+  border:4px solid #fff;
 }
-.q-badge{
-  background:linear-gradient(135deg,#1565c0,#0d47a1);
-  color:#fff;font-size:.82rem;font-weight:700;
-  padding:4px 14px;border-radius:20px;
+.stk-card.next-stk{
+  background:linear-gradient(135deg,#1a1a1a,#33691e);
+  border:4px solid #aed581;
 }
-.timer-big{font-size:3rem;font-weight:900;color:#1565c0;line-height:1}
-.timer-big.urgent{color:#e91e63;animation:pulse .4s ease infinite}
-.score-chip{font-size:1.1rem;font-weight:900;color:#e91e63}
-.score-lbl{font-size:.68rem;color:#aaa;font-weight:600}
-
-.timer-bar-wrap{width:100%;height:8px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:12px}
-.timer-bar{height:100%;border-radius:8px;background:linear-gradient(90deg,#1565c0,#e91e63);animation:timerShrink linear forwards}
-
-.q-card{
-  background:#fff;border-radius:20px;padding:24px 26px;
-  width:100%;margin-bottom:16px;
-  box-shadow:0 4px 18px rgba(0,0,0,.07);
-  min-height:90px;display:flex;align-items:center;
+.stk-card.end-stk{
+  background:linear-gradient(135deg,#1a1a1a 0%,#bf8600 100%);
+  border:4px solid #ffd54f;
 }
-.q-num-lbl{font-size:.72rem;color:#bbb;font-weight:600;display:block;margin-bottom:4px}
-.q-text{font-size:1.25rem;font-weight:700;line-height:1.6;color:#1a1a2e}
-
-.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
-.ans-btn{
-  padding:18px 14px;border-radius:16px;border:none;cursor:pointer;
-  font-size:1rem;font-weight:700;font-family:'Heebo',Arial,sans-serif;
-  color:#fff;text-align:right;display:flex;align-items:center;gap:10px;
-  transition:transform .12s,box-shadow .2s,opacity .2s;
-}
-.ans-btn:hover:not(:disabled){transform:scale(1.03);box-shadow:0 8px 22px rgba(0,0,0,.2)}
-.ans-btn:active:not(:disabled){transform:scale(.97)}
-.ans-btn:disabled{cursor:not-allowed}
-.a-btn{background:linear-gradient(135deg,#ff5252,#d32f2f)}
-.b-btn{background:linear-gradient(135deg,#2979ff,#1565c0)}
-.c-btn{background:linear-gradient(135deg,#ffab00,#e65100)}
-.d-btn{background:linear-gradient(135deg,#00e676,#00897b)}
-.ans-icon{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.22);
-  display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;flex-shrink:0}
-.ans-text{flex:1;line-height:1.4}
-
-.ans-btn.correct{box-shadow:0 0 0 4px #00e676,0 8px 28px rgba(0,230,118,.35)!important;opacity:1!important;animation:pop .4s ease}
-.ans-btn.wrong{animation:shake .4s ease;opacity:.3!important}
-.ans-btn.reveal{box-shadow:0 0 0 4px #00e676!important;opacity:1!important}
-.ans-btn.faded{opacity:.25}
-
-/* ===== FEEDBACK ===== */
-.feedback{
-  display:none;padding:18px;border-radius:14px;
-  font-size:1.15rem;font-weight:800;width:100%;
-  text-align:center;margin-top:12px;animation:bounceIn .4s ease;
-}
-.feedback.show{display:block}
-.fb-correct{background:linear-gradient(135deg,#00c853,#00897b);color:#fff}
-.fb-wrong{background:linear-gradient(135deg,#ff5252,#d32f2f);color:#fff}
-.fb-timeout{background:linear-gradient(135deg,#ffab00,#e65100);color:#fff}
-
-.waiting-next{
-  display:none;width:100%;background:#fff;border-radius:14px;
-  padding:16px;text-align:center;margin-top:12px;color:#888;font-size:.9rem;
-  animation:bounceIn .4s ease;
-}
-.waiting-next.show{display:block}
-
-/* ===== LEADERBOARD (between questions) ===== */
-#screen-lb{text-align:center}
-.lb-card{background:#fff;border-radius:22px;padding:28px 30px;width:100%;max-width:560px;box-shadow:0 8px 40px rgba(0,0,0,.1)}
-.lb-header-big{font-size:1.6rem;font-weight:900;margin-bottom:4px;color:#1a1a2e}
-.lb-header-sub{color:#888;font-size:.88rem;margin-bottom:20px}
-.lb-row-p{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid #f5f5f5;
-  animation:slideUp .3s ease backwards;
-}
-.lb-row-p:last-child{border-bottom:none}
-.lb-rank-badge{
-  width:30px;height:30px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:.82rem;flex-shrink:0;
-}
-.rk1{background:linear-gradient(135deg,#ffd700,#ff8f00);color:#fff}
-.rk2{background:linear-gradient(135deg,#b0bec5,#607d8b);color:#fff}
-.rk3{background:linear-gradient(135deg,#ff7043,#bf360c);color:#fff}
-.rkn{background:#f0f0f0;color:#888}
-.lb-me{background:rgba(233,30,99,.07);border-radius:8px;padding:0 8px}
-.lb-p-name{flex:1;font-weight:700;font-size:.95rem;text-align:right;color:#1a1a2e}
-.lb-p-score{font-size:1.1rem;font-weight:900;color:#e91e63}
-.lb-p-pts-gained{font-size:.75rem;color:#00897b;font-weight:700}
-
-.wait-for-next{color:#aaa;font-size:.9rem;margin-top:16px;
-  display:flex;align-items:center;justify-content:center;gap:8px}
-
-/* ===== FINAL ===== */
-#screen-final{text-align:center}
-.final-card{background:#fff;border-radius:22px;padding:36px;width:100%;max-width:520px;box-shadow:0 8px 40px rgba(0,0,0,.1)}
-.final-emoji{font-size:4.5rem;margin-bottom:10px}
-.final-name{font-size:1.8rem;font-weight:900;margin-bottom:6px}
-.final-score-big{
-  font-size:3.5rem;font-weight:900;
-  background:linear-gradient(135deg,#f5a623,#e91e63);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+.stk-main-txt{
+  font-family:'Heebo',sans-serif;
+  font-weight:900;
+  font-size:2.4rem;
+  line-height:1.1;
+  color:#fff;
+  -webkit-text-stroke:3px #000;
+  paint-order:stroke fill;
+  display:block;
   margin-bottom:4px;
+  text-shadow:3px 3px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000;
 }
-.final-stats-row{display:flex;gap:14px;justify-content:center;margin:20px 0}
-.fstat{flex:1;background:#f9f9f9;border-radius:12px;padding:14px}
-.fstat-val{font-size:1.8rem;font-weight:900}
-.fstat-lbl{font-size:.75rem;color:#aaa;margin-top:2px}
-.btn-rejoin{
-  margin-top:20px;padding:14px 40px;border-radius:50px;border:none;
-  background:linear-gradient(135deg,#e91e63,#c2185b);
-  color:#fff;font-size:1.05rem;font-weight:800;
-  cursor:pointer;font-family:'Heebo',Arial,sans-serif;transition:transform .15s;
+.stk-sub-txt{
+  font-family:'Heebo',sans-serif;
+  font-weight:800;
+  font-size:1.1rem;
+  color:#ffd54f;
+  -webkit-text-stroke:1.5px #000;
+  paint-order:stroke fill;
+  display:block;
+  text-shadow:2px 2px 0 #000;
 }
-.btn-rejoin:hover{transform:scale(1.05)}
-
-.confetti-piece{position:fixed;width:10px;height:14px;border-radius:3px;
-  top:-20px;animation:confettiFall linear forwards;pointer-events:none;z-index:9999}
-
-/* progress dots */
-.prog-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;width:100%}
-.pd{width:14px;height:14px;border-radius:50%;background:#ddd;transition:background .3s}
-.pd.correct{background:#00c853}.pd.wrong{background:#ff5252}.pd.timeout{background:#ffab00}
-.pd.current{background:#1565c0;animation:pulse .8s ease infinite}
-
-@media(max-width:560px){
-  .ans-grid{grid-template-columns:1fr}
-  .timer-big{font-size:2rem}
-  .q-text{font-size:1.05rem}
+.stk-icon{font-size:2.2rem;display:block;margin-bottom:6px;filter:drop-shadow(2px 2px 0 #000)}
+/* score badge on correct sticker */
+.stk-score{
+  background:#ffd54f;color:#1a1a1a;
+  border:3px solid #000;border-radius:30px;
+  padding:6px 18px;
+  font-family:'Heebo',sans-serif;font-weight:900;font-size:1.3rem;
+  display:inline-block;margin-top:10px;
+  text-shadow:none;-webkit-text-stroke:0;
 }
+.dot.err{background:#e53935}
+.dot.skip{background:#ff9800}
 </style>
 </head>
 <body>
 
-<!-- JOIN -->
-<div id="screen-join" class="screen active">
-  <div class="join-logo">בוחן תחבולה</div>
-  <div class="join-sub">שעת מפקד | הכנס את שמך כדי להצטרף</div>
+<!-- STICKER OVERLAY -->
+<div id="sticker-overlay">
+  <div class="sticker-popup" id="sticker-popup">
+    <div class="stk-card" id="stk-card">
+      <span class="stk-icon" id="stk-icon">🎯</span>
+      <span class="stk-main-txt" id="stk-main">בחרת נכון!</span>
+      <span class="stk-sub-txt" id="stk-sub">כגז אחי 🔥</span>
+      <div class="stk-score" id="stk-score" style="display:none">+1000</div>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN SCREEN -->
+<div class="screen active" id="screen-join">
+  <div class="logo-title">🎯 בוחן תחבולה</div>
+  <div class="logo-sub">פאנל חניך</div>
+
   <div class="join-card">
-    <h2>הצטרף לבוחן</h2>
-    <p>פתח את <strong>quiz-admin.html</strong> בטאב של המנהל<br>ואז הצטרף מכאן</p>
-    <input class="inp-name" id="inp-name" type="text" placeholder="השם שלך..." maxlength="16"
-      onkeydown="if(event.key==='Enter')joinGame()"/>
-    <button class="btn-join" onclick="joinGame()">🚀 הצטרף לבוחן!</button>
+    <h2>כניסה למשחק</h2>
+    <div class="field">
+      <label>👤 השם שלך</label>
+      <input type="text" id="inp-name" placeholder="הכנס שם..." maxlength="20"
+        onkeydown="if(event.key==='Enter')document.getElementById('inp-room').focus()">
+    </div>
+    <div class="field">
+      <label>🔑 קוד חדר (מהמנהל)</label>
+      <input type="text" id="inp-room" class="room-input" placeholder="XXXXXX" maxlength="8"
+        autocomplete="off" onkeydown="if(event.key==='Enter')joinGame()">
+    </div>
+    <button class="btn-join" onclick="joinGame()">🚀 הצטרף למשחק</button>
+    <div id="join-error" class="join-error"></div>
+  </div>
+
+  <details class="config-section">
+    <summary>⚙️ הגדרות Firebase (לחץ לפתיחה)</summary>
+    <div class="config-field">
+      <label>Database URL</label>
+      <input type="text" id="cfg-dburl" placeholder="https://your-project-default-rtdb.firebaseio.com" dir="ltr">
+    </div>
+    <div class="config-field">
+      <label>API Key</label>
+      <input type="text" id="cfg-apikey" placeholder="AIzaSy..." dir="ltr">
+    </div>
+    <div class="config-field">
+      <label>Project ID</label>
+      <input type="text" id="cfg-projectid" placeholder="your-project-id" dir="ltr">
+    </div>
+    <button class="btn-save-config" onclick="saveConfig()">💾 שמור הגדרות</button>
+  </details>
+</div>
+
+<!-- WAITING SCREEN -->
+<div class="screen" id="screen-waiting">
+  <div class="wait-avatar" id="wait-avatar">⏳</div>
+  <div class="wait-title" id="wait-title">ממתין למנהל...</div>
+  <div class="wait-sub" id="wait-sub">המנהל יפתח את הבוחן בקרוב</div>
+  <div id="admin-status-badge" class="admin-status off">
+    <div class="status-dot-sm"></div>
+    <span id="admin-status-text">מחפש מנהל...</span>
   </div>
 </div>
 
-<!-- WAITING FOR GAME -->
-<div id="screen-waiting" class="screen">
-  <div class="waiting-wrap">
-    <div class="wait-avatar" id="wait-avatar">🦁</div>
-    <div class="wait-name" id="wait-name"></div>
-    <div class="wait-msg">ממתין לתחילת הבוחן...</div>
-    <div class="wait-dots"><div class="dot-anim"></div><div class="dot-anim"></div><div class="dot-anim"></div></div>
-    <span class="admin-status" id="admin-status">⚠️ ממתין למנהל...</span>
+<!-- QUESTION SCREEN -->
+<div class="screen" id="screen-question">
+  <div class="q-header">
+    <div class="q-progress" id="q-progress">שאלה 1 מתוך 20</div>
+    <div class="player-name-chip" id="player-chip">שם</div>
   </div>
-</div>
-
-<!-- QUESTION -->
-<div id="screen-question" class="screen">
-  <div class="q-topbar">
-    <div>
-      <div class="q-badge" id="q-badge">שאלה 1/20</div>
-      <div style="font-size:.72rem;color:#aaa;margin-top:3px" id="my-name-top"></div>
-    </div>
-    <div style="text-align:center">
-      <div class="timer-big" id="timer-big">60</div>
-      <div style="font-size:.6rem;color:#aaa;letter-spacing:.5px">שניות</div>
-    </div>
-    <div style="text-align:left">
-      <div class="score-chip" id="score-chip">0</div>
-      <div class="score-lbl">נקודות</div>
-    </div>
+  <div class="timer-container">
+    <div class="player-timer" id="player-timer">--</div>
+    <div class="timer-progress"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
   </div>
-
-  <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
-  <div class="prog-dots" id="prog-dots"></div>
-
   <div class="q-card">
-    <div style="width:100%">
-      <span class="q-num-lbl" id="q-num-lbl">שאלה 1</span>
-      <div class="q-text" id="q-text"></div>
-    </div>
+    <div class="q-text" id="player-q-text">טוען שאלה...</div>
   </div>
-
-  <div class="ans-grid" id="ans-grid"></div>
-  <div class="feedback" id="feedback"></div>
-  <div class="waiting-next" id="waiting-next">⏳ ממתין לשאלה הבאה...</div>
+  <div class="answers-grid" id="answers-grid"></div>
+  <div class="answered-msg" id="answered-msg">✅ תשובתך נשמרה! ממתין לתוצאות...</div>
 </div>
 
-<!-- LEADERBOARD (between questions) -->
-<div id="screen-lb" class="screen">
+<!-- LEADERBOARD SCREEN -->
+<div class="screen" id="screen-lb">
+  <div class="lb-title">📊 תוצאות השאלה</div>
+  <div id="my-result-card" class="my-result"></div>
   <div class="lb-card">
-    <div class="lb-header-big">🏆 לוח מובילים</div>
-    <div class="lb-header-sub" id="lb-sub">אחרי שאלה 1</div>
-    <div id="lb-rows-p"></div>
-    <div class="wait-for-next">
-      <div class="dot-anim"></div>
-      ממתין לשאלה הבאה מהמנהל
-    </div>
+    <div style="font-weight:800;font-size:.95rem;color:#888;margin-bottom:12px;text-align:right">🏆 טבלת מובילים</div>
+    <div id="lb-rows-player"></div>
+  </div>
+  <div class="wait-next">ממתין לשאלה הבאה...</div>
+</div>
+
+<!-- FINAL SCREEN -->
+<div class="screen" id="screen-final">
+  <div class="final-emoji">🎉</div>
+  <div class="final-title">הבוחן הסתיים!</div>
+  <div class="final-sub" id="final-sub">כל הכבוד על ההשתתפות</div>
+  <div class="my-final-score">
+    <div class="my-rank" id="my-final-rank">#1</div>
+    <div class="my-score-val" id="my-final-score-val">0</div>
+    <div class="my-score-label">נקודות</div>
+    <div class="progress-dots" id="progress-dots"></div>
+  </div>
+  <div class="lb-card">
+    <div style="font-weight:800;font-size:.95rem;color:#888;margin-bottom:12px;text-align:right">🏅 תוצאות סופיות</div>
+    <div id="final-lb-rows-player"></div>
   </div>
 </div>
 
-<!-- FINAL -->
-<div id="screen-final" class="screen">
-  <div class="final-card">
-    <div class="final-emoji" id="final-emoji">🏆</div>
-    <div class="final-name" id="final-name"></div>
-    <div class="final-score-big" id="final-score"></div>
-    <div style="color:#aaa;font-size:.85rem;margin-bottom:4px">נקודות סופיות</div>
-    <div class="final-stats-row">
-      <div class="fstat"><div class="fstat-val" style="color:#00c853" id="f-correct">0</div><div class="fstat-lbl">נכון</div></div>
-      <div class="fstat"><div class="fstat-val" style="color:#ff5252" id="f-wrong">0</div><div class="fstat-lbl">שגוי</div></div>
-      <div class="fstat"><div class="fstat-val" style="color:#ffab00" id="f-timeout">0</div><div class="fstat-lbl">פג זמן</div></div>
-    </div>
-    <div id="final-msg" style="color:#555;font-size:1rem;margin-bottom:16px"></div>
-    <button class="btn-rejoin" onclick="rejoin()">🔄 שחק שוב</button>
-  </div>
-</div>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+import { getDatabase, ref, set, get, onValue, update } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js';
 
-<script>
+/* ================================================================ DATA */
 const QUESTIONS=[
   {q:'מהי ההגדרה היסודית של "תחבולה" לפי עקרונות המלחמה?',answers:['הוספת אמצעי הונאה לתוכנית המבצעית הקיימת.','דרך מחוכמת לעשיית מלחמה ע"י חיפוש תורפות האויב או גרימתן.','שימוש באמצעים טכנולוגיים מתקדמים שאינם מוכרים לאויב.','ביצוע איגוף עמוק של כוחות האויב.'],correct:1},
   {q:'מהו הקשר בין תחבולה לרעיון המבצעי?',answers:['התחבולה היא תוספת אופציונלית לרעיון המרכזי.','התחבולה מתבצעת רק לאחר הרעיון המבצעי נכשל.','התחבולה היא מהותו של הרעיון המבצעי שסביבו מתגבשת שיטת הביצוע.','הרעיון המבצעי הוא הכלי הטקטי למימוש התחבולה האסטרטגית.'],correct:2},
@@ -324,279 +340,427 @@ const QUESTIONS=[
   {q:'מהי "הטעיה" בתכנית המבצע?',answers:['השארת פרטים עמומים בפקודה.','סדרת פעולות המטעות את האויב לגבי סד"כ, מקום וזמן הקרב הקונקרטי.','שקר למפקדים הממונים לגבי יכולות היחידה.','תקיפה חזיתית ללא תחכום.'],correct:1},
   {q:'כיצד עקרון ה"פשטות" משפיע על התחבולה?',answers:['תחבולה חייבת להיות מורכבת כדי להצליח.','פשטות התוכנית והשפה המשותפת מקלים על ביצוע שינויים ותחבולות בקרב.','עקרון הפשטות אוסר על שימוש בתחבולות.','פשטות נועדה רק לדרג הטקטי, ותחבולה רק לדרג המערכתי.'],correct:1},
   {q:'מהו תפקיד המודיעין במימוש התחבולה והאבטחה?',answers:['המודיעין הוא המענה החסכוני ביותר לאבטחה ומאפשר לדעת היכן לרכז מאמץ ולבצע תחבולה.','המודיעין רק מאשר את מה שהמפקד כבר החליט.','המודיעין מחליף את הצורך בסיור פיזי.','תפקיד המודיעין הוא לבצע את ההונאה בעצמו.'],correct:0},
-  {q:'מהו ההבדל המהותי בין "גישת השחיקה" ל"גישת התמרון"?',answers:['גישת השחיקה מתמקדת בהשמדת כוחות האויב בחזית, בעוד שגישת התמרון חותרת לפירוק המערכת היריבה כאשר פוגעים במרכז הכובד שלה.','גישת השחיקה היא תמיד הגנתית, בעוד שגישת התמרון היא תמיד התקפית.','גישת השחיקה מופעלת רק בלילה, בעוד שגישת התמרון מופעלת ביום.','אין הבדל בין הגישות.'],correct:0},
+  {q:'מה אפשר לומר על מרחב הלחימה ב"מלחמה בין המלחמות"?',answers:['מרחב הלחימה מוגבל לאזורים פיזיים בלבד.','מרחב הלחימה הורחב לממדים נוספים: מרחב התודעה, הסייבר, הרשתות החברתיות.','מרחב הלחימה התכווץ בשל ההסכמים הבינלאומיים.','הלחימה בין המלחמות מתבצעת אך ורק בזירה הדיפלומטית.'],correct:1},
   {q:'האם לאויב בלתי סדור יש מרכזי כובד?',answers:['כן, כל קבוצה יש לה הגיון פעולה שמכיל את כלל הרכיבים שלה (המערכת).','לא, לאויב בלתי סדור אין מרכז כובד – מרכז כובד זה לצבאות בלבד.','כן, מרכז כובד משתנה מארגון לארגון ויש להמשיג אותו בצורה אחרת.','תשובות א\' + ג\' נכונות.'],correct:3}
 ];
-const LETTERS=['א','ב','ג','ד'];
-const BTN_CLS=['a-btn','b-btn','c-btn','d-btn'];
-const AVATARS=['🦁','🐯','🦊','🐺','🦅','🐉','🦋','🐬','🦄','🐸'];
-const P_COLORS=['#e91e63','#2196f3','#ff6f00','#00897b','#9c27b0','#f44336','#3f51b5','#009688','#ff9800','#795548'];
 
-/* ============================================================ STATE */
-const ch = new BroadcastChannel('quiz-channel');
-const myId = 'p_' + Math.random().toString(36).slice(2,10);
-let myName     = '';
-let myAvatar   = AVATARS[Math.floor(Math.random()*AVATARS.length)];
-let myColor    = P_COLORS[Math.floor(Math.random()*P_COLORS.length)];
-let myScore    = 0;
-let myCorrect  = 0;
-let myWrong    = 0;
-let myTimeout  = 0;
-let currentQ   = -1;
-let timePerQ   = 60;
-let answered   = false;
-let timerInt   = null;
-let timeLeft   = 60;
-let adminAlive = false;
-let dotStates  = [];  // 'correct'|'wrong'|'timeout'|''
-let lastScores = null;
+const ANS_LETTERS=['א','ב','ג','ד'];
+const ANS_EMOJIS=['🔴','🟠','🟢','🟣'];
+const MEDALS=['🥇','🥈','🥉','4️⃣','5️⃣'];
 
-ch.onmessage = e => {
-  const d = e.data;
-  if (d.type==='ADMIN_ALIVE')     { adminAlive=true; updateAdminStatus(); }
-  if (d.type==='ADMIN_PONG')      { adminAlive=true; updateAdminStatus(); }
-  if (d.type==='QUESTION_START')  handleQuestionStart(d);
-  if (d.type==='QUESTION_END')    handleQuestionEnd(d);
-  if (d.type==='QUESTION_SKIP')   handleSkip(d);
-  if (d.type==='GAME_END')        handleGameEnd(d);
-  if (d.type==='RESET')           handleReset();
+/* ================================================================ STATE */
+let db = null;
+let roomCode = '';
+let myId = 'p_' + Math.random().toString(36).slice(2,10);
+let myName = '';
+let myScore = 0;
+let myAnswers = [];
+let currentQ = 0;
+let timePerQ = 60;
+let timerInterval = null;
+let questionStartTime = 0;
+let answered = false;
+let lastStateKey = '';
+
+/* ================================================================ CONFIG */
+function getFirebaseConfig() {
+  const saved = localStorage.getItem('quiz_firebase_config');
+  if (saved) { try { return {...DEFAULT_CONFIG, ...JSON.parse(saved)}; } catch(e){} }
+  // Use pre-filled defaults
+  return DEFAULT_CONFIG;
+}
+
+window.saveConfig = function() {
+  const dburl = document.getElementById('cfg-dburl').value.trim();
+  const apikey = document.getElementById('cfg-apikey').value.trim();
+  const projectid = document.getElementById('cfg-projectid').value.trim();
+  if (!dburl || !apikey || !projectid) { alert('יש למלא את כל השדות'); return; }
+  localStorage.setItem('quiz_firebase_config', JSON.stringify({databaseURL: dburl, apiKey: apikey, projectId: projectid}));
+  alert('✅ הגדרות נשמרו!');
 };
 
-function updateAdminStatus(){
-  const el=document.getElementById('admin-status');
-  if(el) el.className='admin-status admin-online', el.textContent='✅ המנהל מחובר';
-}
+/* ================================================================ JOIN */
+window.joinGame = async function() {
+  const errEl = document.getElementById('join-error');
+  errEl.style.display = 'none';
+  myName = document.getElementById('inp-name').value.trim();
+  roomCode = document.getElementById('inp-room').value.trim().toUpperCase();
 
-setInterval(()=>{
-  if(adminAlive){ adminAlive=false; }
-  else{
-    const el=document.getElementById('admin-status');
-    if(el) el.className='admin-status admin-offline', el.textContent='⚠️ ממתין למנהל...';
+  if (!myName) { errEl.textContent = '❌ יש להכניס שם'; errEl.style.display = 'block'; return; }
+  if (!roomCode || roomCode.length < 4) { errEl.textContent = '❌ קוד חדר לא תקין'; errEl.style.display = 'block'; return; }
+
+  const config = getFirebaseConfig();
+  if (!config) {
+    errEl.textContent = '❌ יש להגדיר Firebase קודם (לחץ על "הגדרות Firebase" למטה)';
+    errEl.style.display = 'block';
+    return;
   }
-}, 5000);
 
-/* ============================================================ JOIN */
-function joinGame(){
-  const n = document.getElementById('inp-name').value.trim();
-  myName = n || 'חניך';
-  const aIdx = AVATARS.indexOf(myAvatar);
-  document.getElementById('wait-avatar').textContent = myAvatar;
-  document.getElementById('wait-name').textContent   = myName;
-  document.getElementById('my-name-top').textContent = myName;
-  showScreen('screen-waiting');
-  // broadcast join
-  ch.postMessage({type:'PLAYER_JOIN', pid:myId, name:myName});
-  // ping admin
-  ch.postMessage({type:'PING_REQUEST'});
+  const btn = document.querySelector('.btn-join');
+  btn.disabled = true;
+  btn.textContent = '⏳ מתחבר...';
+
+  try {
+    const app = initializeApp(config, 'quiz-player-' + myId);
+    db = getDatabase(app);
+
+    const stateSnap = await get(ref(db, `rooms/${roomCode}/state`));
+    if (!stateSnap.exists()) {
+      errEl.textContent = '❌ חדר לא נמצא. בדוק שהמנהל פתח את הבוחן.';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = '🚀 הצטרף למשחק';
+      return;
+    }
+
+    if (stateSnap.val().status === 'gameover') {
+      errEl.textContent = '❌ הבוחן כבר הסתיים';
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = '🚀 הצטרף למשחק';
+      return;
+    }
+
+    await set(ref(db, `rooms/${roomCode}/players/${myId}`), {
+      name: myName, score: 0, online: true, joinedAt: Date.now()
+    });
+
+    document.getElementById('player-chip').textContent = myName;
+    showScreen('screen-waiting');
+    startAdminCheck();
+    listenToState();
+
+  } catch(e) {
+    errEl.textContent = '❌ שגיאה: ' + e.message;
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = '🚀 הצטרף למשחק';
+  }
+};
+
+/* ================================================================ LISTENERS */
+function listenToState() {
+  onValue(ref(db, `rooms/${roomCode}/state`), (snap) => {
+    const s = snap.val();
+    if (!s) return;
+    const key = s.status + '-' + (s.currentQ||0);
+    if (key === lastStateKey && s.status !== 'active') return;
+    lastStateKey = key;
+    handleState(s);
+  });
 }
 
-/* ============================================================ QUESTION */
-function handleQuestionStart({qi, timePerQ: tpq}){
+function startAdminCheck() {
+  setInterval(async () => {
+    try {
+      const snap = await get(ref(db, `rooms/${roomCode}/state/updatedAt`));
+      const diff = Date.now() - (snap.val() || 0);
+      const badge = document.getElementById('admin-status-badge');
+      const text = document.getElementById('admin-status-text');
+      if (diff < 30000) {
+        badge.className = 'admin-status';
+        text.textContent = 'מנהל מחובר ✅';
+      } else {
+        badge.className = 'admin-status off';
+        text.textContent = 'לא מוצא מנהל...';
+      }
+    } catch(e) {}
+  }, 5000);
+}
+
+/* ================================================================ STATE HANDLER */
+function handleState(s) {
+  const {status, currentQ: qi, timePerQ: tpq, questionStartTime: qst, correctAnswer} = s;
   timePerQ = tpq || 60;
-  currentQ = qi;
-  answered = false;
-  timeLeft = timePerQ;
+  currentQ = qi || 0;
 
-  if (dotStates.length < qi) dotStates.push('');
+  if (status === 'lobby') {
+    showScreen('screen-waiting');
+    document.getElementById('wait-avatar').textContent = '⏳';
+    document.getElementById('wait-title').textContent = 'ממתין להתחלה...';
+    document.getElementById('wait-sub').textContent = 'המנהל יפתח את הבוחן בקרוב';
+  }
+  else if (status === 'preview') {
+    showScreen('screen-waiting');
+    document.getElementById('wait-avatar').textContent = '👁';
+    document.getElementById('wait-title').textContent = `שאלה ${currentQ+1} מתוך ${QUESTIONS.length}`;
+    document.getElementById('wait-sub').textContent = 'המנהל עומד להציג את השאלה...';
+    if (currentQ > 0) showNextSticker();
+  }
+  else if (status === 'active') {
+    questionStartTime = qst || Date.now();
+    answered = false;
+    showQuestionScreen();
+  }
+  else if (status === 'ended') {
+    clearInterval(timerInterval);
+    revealAnswers(correctAnswer);
+    setTimeout(() => showLbScreen(), 1500);
+  }
+  else if (status === 'gameover') {
+    clearInterval(timerInterval);
+    showEndSticker();
+    setTimeout(() => showFinalScreen(), 1200);
+  }
+}
 
-  const q = QUESTIONS[qi];
-  document.getElementById('q-badge').textContent = `שאלה ${qi+1}/${QUESTIONS.length}`;
-  document.getElementById('q-num-lbl').textContent = `שאלה ${qi+1}`;
-  document.getElementById('q-text').textContent   = q.q;
-  document.getElementById('score-chip').textContent = myScore.toLocaleString();
-  document.getElementById('feedback').className   = 'feedback';
-  document.getElementById('waiting-next').className = 'waiting-next';
-
-  // progress dots
-  buildDots(qi);
-
-  // answers
-  const grid = document.getElementById('ans-grid');
-  grid.innerHTML='';
-  q.answers.forEach((ans,i)=>{
-    const btn=document.createElement('button');
-    btn.className=`ans-btn ${BTN_CLS[i]}`;
-    btn.innerHTML=`<span class="ans-icon">${LETTERS[i]}</span><span class="ans-text">${ans}</span>`;
-    btn.onclick=()=>selectAns(i);
-    grid.appendChild(btn);
-  });
-
-  // timer
-  const tel=document.getElementById('timer-big');
-  tel.textContent=timePerQ; tel.className='timer-big';
-  const bar=document.getElementById('timer-bar');
-  bar.style.animation='none'; void bar.offsetHeight;
-  bar.style.animationDuration=timePerQ+'s';
-  bar.style.animation=`timerShrink ${timePerQ}s linear forwards`;
-
-  clearInterval(timerInt);
-  timerInt=setInterval(()=>{
-    timeLeft--;
-    tel.textContent=timeLeft;
-    if(timeLeft<=5) tel.className='timer-big urgent';
-    if(timeLeft<=0){ clearInterval(timerInt); handleLocalTimeout(); }
-  },1000);
-
+/* ================================================================ QUESTION */
+function showQuestionScreen() {
+  const q = QUESTIONS[currentQ];
   showScreen('screen-question');
+  document.getElementById('q-progress').textContent = `שאלה ${currentQ+1} מתוך ${QUESTIONS.length}`;
+  document.getElementById('player-q-text').textContent = q.q;
+  document.getElementById('answered-msg').style.display = 'none';
+  document.getElementById('player-timer').classList.remove('urgent');
+
+  document.getElementById('answers-grid').innerHTML = q.answers.map((ans, i) =>
+    `<button class="ans-btn a${i}" onclick="submitAnswer(${i})">
+      <span class="ans-letter">${ANS_EMOJIS[i]} ${ANS_LETTERS[i]}</span>
+      ${esc(ans)}
+    </button>`
+  ).join('');
+
+  startTimer();
 }
 
-function buildDots(current){
-  const c=document.getElementById('prog-dots');
-  c.innerHTML='';
-  for(let i=0;i<QUESTIONS.length;i++){
-    const d=document.createElement('div');
-    const st=dotStates[i]||'';
-    d.className='pd'+(i<current&&st?' '+st:i===current?' current':'');
-    c.appendChild(d);
-  }
+function startTimer() {
+  clearInterval(timerInterval);
+  const startMs = questionStartTime || Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - startMs) / 1000;
+    const tl = Math.max(0, timePerQ - elapsed);
+    const pct = (tl / timePerQ) * 100;
+    document.getElementById('player-timer').textContent = Math.ceil(tl);
+    document.getElementById('timer-fill').style.width = pct + '%';
+    document.getElementById('player-timer').classList.toggle('urgent', tl <= 5);
+    if (tl <= 0) { clearInterval(timerInterval); handleTimeout(); }
+  }, 200);
 }
 
-function selectAns(idx){
-  if(answered) return;
-  answered=true;
-  clearInterval(timerInt);
-  const q=QUESTIONS[currentQ];
-  const btns=document.querySelectorAll('.ans-btn');
-  btns.forEach(b=>b.disabled=true);
-
-  if(idx===q.correct){
-    const pts=Math.max(200,Math.round((timeLeft/timePerQ)*1000));
-    myScore+=pts; myCorrect++;
-    btns[idx].classList.add('correct');
-    showFeedback('correct',`✅ נכון! +${pts} נקודות`);
-    dotStates[currentQ]='correct';
-  } else {
-    myWrong++;
-    btns[idx].classList.add('wrong');
-    btns[q.correct].classList.add('reveal');
-    btns.forEach((b,i)=>{ if(i!==idx&&i!==q.correct)b.classList.add('faded'); });
-    showFeedback('wrong',`❌ לא נכון... תשובה נכונה: ${LETTERS[q.correct]}`);
-    dotStates[currentQ]='wrong';
-  }
-  document.getElementById('score-chip').textContent=myScore.toLocaleString();
-  // send to admin
-  ch.postMessage({type:'PLAYER_ANSWER', pid:myId, qi:currentQ, ai:idx, timeLeft});
-  document.getElementById('waiting-next').className='waiting-next show';
+function handleTimeout() {
+  if (answered) return;
+  answered = true;
+  if (!myAnswers[currentQ]) myAnswers[currentQ] = {answer: -1, correct: false, score: 0};
+  document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+  showSticker('timeout', 0);
+  const msg = document.getElementById('answered-msg');
+  msg.style.display = 'block';
+  msg.textContent = '⏰ הזמן נגמר!';
+  msg.style.background = '#fff3e0';
+  msg.style.color = '#e65100';
 }
 
-function handleLocalTimeout(){
-  if(answered) return;
-  answered=true;
-  const q=QUESTIONS[currentQ];
-  const btns=document.querySelectorAll('.ans-btn');
-  btns.forEach(b=>b.disabled=true);
-  btns[q.correct].classList.add('reveal');
-  btns.forEach((b,i)=>{ if(i!==q.correct)b.classList.add('faded'); });
-  myTimeout++;
-  dotStates[currentQ]='timeout';
-  showFeedback('timeout',`⏰ פג הזמן! תשובה נכונה: ${LETTERS[q.correct]}`);
-  ch.postMessage({type:'PLAYER_ANSWER', pid:myId, qi:currentQ, ai:-1, timeLeft:0});
-  document.getElementById('waiting-next').className='waiting-next show';
-}
+window.submitAnswer = function(idx) {
+  if (answered) return;
+  answered = true;
+  const elapsed = Date.now() - questionStartTime;
+  const score = Math.max(200, Math.round(((timePerQ*1000 - elapsed) / (timePerQ*1000)) * 1000));
+  const isCorrect = idx === QUESTIONS[currentQ].correct;
+  myAnswers[currentQ] = {answer: idx, correct: isCorrect, score: isCorrect ? score : 0};
 
-function handleQuestionEnd({qi, correctIndex, scores}){
-  clearInterval(timerInt);
-  if(!answered) handleLocalTimeout();
-  lastScores=scores;
-  // show leaderboard after short delay
-  setTimeout(()=>showLeaderboardScreen(qi,scores),1200);
-}
-
-function handleSkip({qi}){
-  clearInterval(timerInt);
-  if(!answered){ myTimeout++; dotStates[currentQ]='timeout'; }
-  answered=true;
-  showScreen('screen-waiting');
-}
-
-/* ============================================================ LEADERBOARD */
-function showLeaderboardScreen(qi, scores){
-  if(!scores) { showScreen('screen-waiting'); return; }
-  document.getElementById('lb-sub').textContent=`אחרי שאלה ${qi+1} מתוך ${QUESTIONS.length}`;
-  const sorted=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
-  const rows=document.getElementById('lb-rows-p');
-  rows.innerHTML='';
-  sorted.forEach(([pid,pd],ri)=>{
-    const isMe=pid===myId;
-    const rankCls=ri===0?'rk1':ri===1?'rk2':ri===2?'rk3':'rkn';
-    const medals=['🥇','🥈','🥉','4','5'];
-    const row=document.createElement('div');
-    row.className='lb-row-p'+(isMe?' lb-me':'');
-    row.style.animationDelay=(ri*0.07)+'s';
-    row.innerHTML=`
-      <div class="lb-rank-badge ${rankCls}">${ri+1}</div>
-      <div class="lb-p-name">${pd.name}${isMe?' 👈':''}</div>
-      <div class="lb-p-pts-gained"></div>
-      <div class="lb-p-score">${pd.score.toLocaleString()}</div>`;
-    rows.appendChild(row);
+  document.querySelectorAll('.ans-btn').forEach((b, i) => {
+    b.disabled = true;
+    b.classList.toggle('selected', i === idx);
   });
+  const msg = document.getElementById('answered-msg');
+  msg.style.display = 'block';
+  msg.textContent = '✅ תשובתך נשמרה! ממתין לתוצאות...';
+  msg.style.background = '#e8f5e9';
+  msg.style.color = '#2e7d32';
+
+  // Show sticker reaction
+  showSticker(isCorrect ? 'correct' : 'wrong', isCorrect ? score : 0);
+
+  set(ref(db, `rooms/${roomCode}/answers/${currentQ}/${myId}`), {
+    answer: idx, score: isCorrect ? score : 0, timeMs: elapsed
+  }).catch(() => {});
+};
+
+function revealAnswers(correctAnswer) {
+  clearInterval(timerInterval);
+  const correct = (correctAnswer !== undefined) ? correctAnswer : QUESTIONS[currentQ].correct;
+  document.querySelectorAll('.ans-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === correct) b.classList.add('reveal-correct');
+    else b.classList.add('wrong');
+  });
+}
+
+/* ================================================================ LEADERBOARD */
+async function showLbScreen() {
   showScreen('screen-lb');
-}
-
-/* ============================================================ GAME END */
-function handleGameEnd({scores}){
-  clearInterval(timerInt);
-  showFinalScreen(scores);
-}
-
-function showFinalScreen(scores){
-  const pct=myCorrect/QUESTIONS.length;
-  let emoji=pct>=.9?'🥇':pct>=.7?'🥈':pct>=.5?'🥉':'📚';
-  let msg=pct>=.9?'מצוין! שלטת על החומר ברמה הגבוהה ביותר!':
-           pct>=.7?'יפה מאוד! הבנה טובה של עקרונות התחבולה.':
-           pct>=.5?'לא רע! כדאי לחזור על הנושאים שהתקלת בהם.':
-           'כדאי לחזור על החומר. כל שגיאה היא הזדמנות ללמוד!';
-  document.getElementById('final-emoji').textContent=emoji;
-  document.getElementById('final-name').textContent=myName;
-  document.getElementById('final-score').textContent=myScore.toLocaleString();
-  document.getElementById('f-correct').textContent=myCorrect;
-  document.getElementById('f-wrong').textContent=myWrong;
-  document.getElementById('f-timeout').textContent=myTimeout;
-  document.getElementById('final-msg').textContent=msg;
-  showScreen('screen-final');
-  if(pct>=.7) launchConfetti();
-}
-
-function handleReset(){
-  myScore=0; myCorrect=0; myWrong=0; myTimeout=0;
-  currentQ=-1; answered=false; dotStates=[];
-  clearInterval(timerInt);
-  ch.postMessage({type:'PLAYER_JOIN', pid:myId, name:myName});
-  showScreen('screen-waiting');
-}
-
-function rejoin(){ location.reload(); }
-
-function showFeedback(type,msg){
-  const el=document.getElementById('feedback');
-  el.className=`feedback fb-${type} show`;
-  el.textContent=msg;
-}
-
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function launchConfetti(){
-  const colors=['#e91e63','#f5a623','#1565c0','#00c853','#9c27b0','#ff5252'];
-  for(let i=0;i<70;i++){
-    setTimeout(()=>{
-      const c=document.createElement('div');
-      c.className='confetti-piece';
-      c.style.left=Math.random()*100+'vw';
-      c.style.background=colors[Math.floor(Math.random()*colors.length)];
-      c.style.animationDuration=(Math.random()*2+1.5)+'s';
-      c.style.transform=`rotate(${Math.random()*360}deg)`;
-      document.body.appendChild(c);
-      setTimeout(()=>c.remove(),4000);
-    },i*40);
+  const myAns = myAnswers[currentQ];
+  const card = document.getElementById('my-result-card');
+  if (!myAns || myAns.answer === -1) {
+    card.className = 'my-result timeout';
+    card.innerHTML = '<span class="result-icon">⏰</span>הזמן נגמר!<div class="result-pts">+0 נקודות</div>';
+  } else if (myAns.correct) {
+    card.className = 'my-result correct';
+    card.innerHTML = `<span class="result-icon">🎉</span>תשובה נכונה!<div class="result-pts">+${myAns.score.toLocaleString()} נקודות</div>`;
+  } else {
+    const correctText = QUESTIONS[currentQ].answers[QUESTIONS[currentQ].correct];
+    card.className = 'my-result wrong';
+    card.innerHTML = `<span class="result-icon">❌</span>תשובה שגויה<br><small>הנכונה: ${esc(correctText)}</small><div class="result-pts">+0 נקודות</div>`;
   }
+
+  try {
+    const snap = await get(ref(db, `rooms/${roomCode}/players`));
+    renderLb(snap.val() || {}, document.getElementById('lb-rows-player'));
+    // Update my score from firebase
+    const p = (snap.val() || {})[myId];
+    if (p) myScore = p.score || 0;
+  } catch(e) {}
 }
 
-// Allow Enter to join
-document.getElementById('inp-name').addEventListener('keydown',e=>{ if(e.key==='Enter')joinGame(); });
+function renderLb(players, el) {
+  const sorted = Object.entries(players)
+    .map(([pid, p]) => ({pid, name: p.name||'חניך', score: p.score||0}))
+    .sort((a,b) => b.score - a.score).slice(0, 5);
+  el.innerHTML = sorted.map((p, i) =>
+    `<div class="lb-row rank-${i+1} ${p.pid===myId?'highlight':''}">
+      <div class="lb-medal">${MEDALS[i]||''}</div>
+      <div class="lb-name">${esc(p.name)}${p.pid===myId?' 👈':''}</div>
+      <div class="lb-pts">${p.score.toLocaleString()}</div>
+    </div>`
+  ).join('') || '<div style="color:#bbb;text-align:center">טוען...</div>';
+}
+
+/* ================================================================ FINAL */
+async function showFinalScreen() {
+  showScreen('screen-final');
+  try {
+    const snap = await get(ref(db, `rooms/${roomCode}/players`));
+    const players = snap.val() || {};
+    const sorted = Object.entries(players).sort(([,a],[,b]) => (b.score||0) - (a.score||0));
+    const myRank = sorted.findIndex(([pid]) => pid === myId) + 1;
+    const myFinalScore = (players[myId]?.score) || 0;
+
+    document.getElementById('my-final-rank').textContent = '#' + myRank;
+    document.getElementById('my-final-score-val').textContent = myFinalScore.toLocaleString();
+    document.getElementById('final-sub').textContent = `סיימת במקום ${myRank} מתוך ${sorted.length} משתתפים`;
+    document.getElementById('progress-dots').innerHTML = myAnswers.map((a, i) =>
+      `<div class="dot ${!a ? 'skip' : (a.correct ? 'ok' : 'err')}" title="שאלה ${i+1}"></div>`
+    ).join('');
+    renderLb(players, document.getElementById('final-lb-rows-player'));
+  } catch(e) {}
+}
+
+/* ================================================================ STICKER POPUPS */
+const STICKER_CORRECT = [
+  {icon:'🎯', main:'בחרת נכון!', sub:'כגז אחי 🔥', cls:'correct-stk'},
+  {icon:'🏆', main:'בחרת נכון!', sub:'אש אחותי! 💥', cls:'correct-stk'},
+  {icon:'💪', main:'מדויק!',     sub:'כגז אחי 🔥', cls:'correct-stk'},
+];
+const STICKER_WRONG = [
+  {icon:'💀', main:'לא הפעם...',  sub:'תנסה שוב', cls:'wrong-stk'},
+  {icon:'😤', main:'שגוי!',       sub:'כבד אחי...', cls:'wrong-stk'},
+];
+const STICKER_TIMEOUT = [
+  {icon:'⏰', main:'פג הזמן!',   sub:'נהג, התקדם!', cls:'timeout-stk'},
+];
+
+let stickerTimer = null;
+
+function showSticker(type, scoreVal) {
+  const popup = document.getElementById('sticker-popup');
+  const card  = document.getElementById('stk-card');
+  const icon  = document.getElementById('stk-icon');
+  const main  = document.getElementById('stk-main');
+  const sub   = document.getElementById('stk-sub');
+  const score = document.getElementById('stk-score');
+
+  // pick sticker data
+  let data;
+  if (type === 'correct') data = STICKER_CORRECT[Math.floor(Math.random() * STICKER_CORRECT.length)];
+  else if (type === 'wrong') data = STICKER_WRONG[Math.floor(Math.random() * STICKER_WRONG.length)];
+  else data = STICKER_TIMEOUT[0];
+
+  card.className = 'stk-card ' + data.cls;
+  icon.textContent = data.icon;
+  main.textContent = data.main;
+  sub.textContent  = data.sub;
+
+  if (type === 'correct' && scoreVal) {
+    score.textContent = '+' + scoreVal.toLocaleString() + ' נקודות';
+    score.style.display = 'inline-block';
+  } else {
+    score.style.display = 'none';
+  }
+
+  // reset & show
+  clearTimeout(stickerTimer);
+  popup.classList.remove('hide');
+  popup.classList.remove('show');
+  void popup.offsetWidth; // reflow
+  popup.classList.add('show');
+
+  stickerTimer = setTimeout(() => {
+    popup.classList.add('hide');
+    setTimeout(() => { popup.classList.remove('show','hide'); }, 350);
+  }, type === 'correct' ? 2200 : 1600);
+}
+
+function showNextSticker() {
+  const popup = document.getElementById('sticker-popup');
+  const card  = document.getElementById('stk-card');
+  document.getElementById('stk-icon').textContent = '▶';
+  document.getElementById('stk-main').textContent = 'נהג התקדם!';
+  document.getElementById('stk-sub').textContent  = 'שאלה הבאה...';
+  document.getElementById('stk-score').style.display = 'none';
+  card.className = 'stk-card next-stk';
+
+  clearTimeout(stickerTimer);
+  popup.classList.remove('hide','show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  stickerTimer = setTimeout(() => {
+    popup.classList.add('hide');
+    setTimeout(() => popup.classList.remove('show','hide'), 350);
+  }, 1400);
+}
+
+function showEndSticker() {
+  const popup = document.getElementById('sticker-popup');
+  const card  = document.getElementById('stk-card');
+  document.getElementById('stk-icon').textContent = '🪖';
+  document.getElementById('stk-main').textContent = 'TANK YOU';
+  document.getElementById('stk-sub').textContent  = 'אנחנו השריון של ישראל';
+  document.getElementById('stk-score').style.display = 'none';
+  card.className = 'stk-card end-stk';
+
+  clearTimeout(stickerTimer);
+  popup.classList.remove('hide','show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  stickerTimer = setTimeout(() => {
+    popup.classList.add('hide');
+    setTimeout(() => popup.classList.remove('show','hide'), 350);
+  }, 3000);
+}
+
+/* ================================================================ UTILS */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* AUTO-LOAD SAVED CONFIG */
+const DEFAULT_CONFIG = {
+  apiKey:      'AIzaSyBJqZ8WZCHh93STOolZR9FDWgPGkHabink',
+  databaseURL: 'https://tachbula-quiz-7c607-default-rtdb.firebaseio.com',
+  projectId:   'tachbula-quiz-7c607',
+  appId:       '1:33165326980:web:2f1d3320a17c6e500d20d1'
+};
+
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('quiz_firebase_config');
+  let c = DEFAULT_CONFIG;
+  if (saved) { try { c = {...DEFAULT_CONFIG, ...JSON.parse(saved)}; } catch(e){} }
+  document.getElementById('cfg-dburl').value     = c.databaseURL || '';
+  document.getElementById('cfg-apikey').value    = c.apiKey     || '';
+  document.getElementById('cfg-projectid').value = c.projectId  || '';
+
+  // Auto-save defaults if not yet saved
+  if (!saved && c.apiKey) localStorage.setItem('quiz_firebase_config', JSON.stringify(c));
+});
 </script>
 </body>
 </html>
