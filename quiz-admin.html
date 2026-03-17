@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>בוחן תחבולה – מנהל</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Heebo',Arial,sans-serif;background:#0f0f1a;color:#fff;min-height:100vh}
+
+/* ---- TOPBAR ---- */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;
+  background:rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.topbar-logo{font-size:1.3rem;font-weight:900;
+  background:linear-gradient(135deg,#e91e63,#ff6f00,#2196f3);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.topbar-status{display:flex;gap:16px;align-items:center;font-size:.85rem;color:#aaa}
+.status-dot{width:10px;height:10px;border-radius:50%;background:#4caf50;display:inline-block;
+  animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ---- LAYOUT ---- */
+.layout{display:grid;grid-template-columns:300px 1fr;grid-template-rows:auto 1fr;height:calc(100vh - 57px)}
+
+/* ---- SIDEBAR ---- */
+.sidebar{
+  border-left:1px solid rgba(255,255,255,.08);
+  overflow-y:auto;padding:16px;
+  grid-row:1/3;
+}
+.sidebar-title{font-size:.75rem;font-weight:700;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+
+/* player list */
+.player-card{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.05);border-radius:10px;
+  padding:10px 12px;margin-bottom:8px;
+  transition:background .2s;
+}
+.player-card.answered{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.3)}
+.p-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.p-name{flex:1;font-weight:700;font-size:.9rem}
+.p-score{font-size:.85rem;color:#f5a623;font-weight:700}
+.p-badge{font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700}
+.badge-answered{background:#2ecc71;color:#fff}
+.badge-waiting{background:#666;color:#ccc}
+
+.players-empty{color:#555;font-size:.85rem;padding:10px 0;text-align:center}
+
+/* question list */
+.q-list-item{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:8px;cursor:pointer;
+  font-size:.82rem;margin-bottom:4px;
+  transition:background .15s;
+  color:#aaa;
+}
+.q-list-item:hover{background:rgba(255,255,255,.06)}
+.q-list-item.active-q{background:rgba(33,150,243,.2);color:#90caf9;font-weight:700}
+.q-list-item.done-q{color:#555}
+.q-num-badge{width:22px;height:22px;border-radius:6px;font-size:.7rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,.1)}
+.q-num-badge.done{background:#2ecc71;color:#fff}
+.q-num-badge.active{background:#2196f3;color:#fff}
+
+/* ---- MAIN AREA ---- */
+.main-area{padding:20px 24px;overflow-y:auto;grid-column:2}
+
+/* ---- LOBBY ---- */
+#view-lobby{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center}
+.lobby-title{font-size:2.5rem;font-weight:900;margin-bottom:8px;
+  background:linear-gradient(135deg,#e91e63,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lobby-desc{color:#aaa;margin-bottom:32px;font-size:1rem}
+.time-row{display:flex;gap:12px;margin-bottom:32px}
+.time-opt{
+  padding:14px 28px;border-radius:12px;border:2px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.04);color:#aaa;font-size:1.1rem;font-weight:800;
+  cursor:pointer;font-family:'Heebo',Arial,sans-serif;transition:all .2s;
+}
+.time-opt.sel{border-color:#e91e63;background:rgba(233,30,99,.15);color:#e91e63}
+.lobby-info{color:#666;font-size:.85rem;margin-bottom:28px}
+.btn-start-game{
+  padding:18px 60px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#e91e63,#c2185b);
+  color:#fff;font-size:1.3rem;font-weight:900;
+  cursor:pointer;font-family:'Heebo',Arial,sans-serif;
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-start-game:hover{transform:scale(1.04);box-shadow:0 8px 32px rgba(233,30,99,.5)}
+.btn-start-game:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.waiting-badge{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:20px 32px;margin-bottom:24px;
+  font-size:1.8rem;font-weight:900;color:#2196f3;
+}
+.waiting-badge span{font-size:.85rem;color:#aaa;display:block;font-weight:400;margin-top:4px}
+
+/* ---- QUESTION CONTROL ---- */
+#view-question{display:none}
+.q-ctrl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.q-ctrl-title{font-size:1.1rem;font-weight:700;color:#aaa}
+
+/* big timer */
+.ctrl-timer{
+  font-size:4rem;font-weight:900;color:#2196f3;
+  text-align:center;line-height:1;
+}
+.ctrl-timer.urgent{color:#e91e63;animation:pulse .4s ease infinite}
+.timer-bar-wrap{width:100%;height:10px;background:rgba(255,255,255,.1);border-radius:10px;overflow:hidden;margin:8px 0 20px}
+.timer-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,#2196f3,#e91e63);animation:timerShrink linear forwards}
+@keyframes timerShrink{from{width:100%}to{width:0%}}
+
+.q-box{
+  background:rgba(255,255,255,.06);border-radius:16px;
+  padding:24px;margin-bottom:20px;
+}
+.q-box-num{font-size:.75rem;color:#666;margin-bottom:6px}
+.q-box-text{font-size:1.25rem;font-weight:700;line-height:1.6}
+
+/* answer grid */
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.ans-card{
+  border-radius:12px;padding:14px 16px;
+  display:flex;align-items:center;gap:10px;
+  font-size:.95rem;font-weight:700;color:#fff;
+  position:relative;overflow:hidden;
+}
+.ans-card.a-c{background:linear-gradient(135deg,#ff5252,#d32f2f)}
+.ans-card.b-c{background:linear-gradient(135deg,#2979ff,#1565c0)}
+.ans-card.c-c{background:linear-gradient(135deg,#ffab00,#e65100)}
+.ans-card.d-c{background:linear-gradient(135deg,#00e676,#00897b)}
+.ans-card.correct-ans{box-shadow:0 0 0 3px #fff,0 0 20px rgba(255,255,255,.3)}
+.ans-ltr{width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.25);
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9rem;flex-shrink:0}
+.ans-vote-bar{
+  position:absolute;bottom:0;right:0;height:4px;background:rgba(255,255,255,.5);
+  transition:width .4s ease;
+}
+.ans-vote-count{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  font-size:1.4rem;font-weight:900;opacity:.7}
+
+/* response counter */
+.resp-counter{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  background:rgba(255,255,255,.04);border-radius:12px;padding:16px;
+  margin-bottom:20px;
+}
+.resp-big{font-size:2.5rem;font-weight:900;color:#2196f3}
+.resp-label{font-size:.85rem;color:#aaa}
+
+/* ctrl buttons */
+.ctrl-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-ctrl{
+  padding:14px 32px;border-radius:50px;border:none;
+  font-size:1rem;font-weight:800;cursor:pointer;
+  font-family:'Heebo',Arial,sans-serif;transition:transform .15s;
+}
+.btn-ctrl:hover{transform:scale(1.04)}
+.btn-end-q{background:linear-gradient(135deg,#ff5252,#d32f2f);color:#fff}
+.btn-skip{background:rgba(255,255,255,.1);color:#aaa}
+.btn-next-q{background:linear-gradient(135deg,#4caf50,#2e7d32);color:#fff;display:none}
+.btn-finish-game{background:linear-gradient(135deg,#9c27b0,#6a1b9a);color:#fff;display:none}
+
+/* ---- LEADERBOARD PANEL ---- */
+.lb-section{margin-top:20px}
+.lb-section-title{font-size:.75rem;font-weight:700;color:#666;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.lb-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;background:rgba(255,255,255,.04);
+  border-radius:10px;margin-bottom:6px;
+  animation:slideUp .3s ease backwards;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.lb-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.8rem;flex-shrink:0}
+.r1{background:linear-gradient(135deg,#ffd700,#ff8f00);color:#fff}
+.r2{background:linear-gradient(135deg,#b0bec5,#607d8b);color:#fff}
+.r3{background:linear-gradient(135deg,#ff7043,#bf360c);color:#fff}
+.rn{background:rgba(255,255,255,.1);color:#aaa}
+.lb-name{flex:1;font-weight:700;font-size:.9rem}
+.lb-pts{font-size:1rem;font-weight:900;color:#f5a623}
+.lb-correct{font-size:.75rem;color:#4caf50}
+
+/* ---- FINAL VIEW ---- */
+#view-final{display:none;text-align:center;padding:40px}
+.final-title{font-size:2.2rem;font-weight:900;margin-bottom:8px}
+.final-sub{color:#aaa;margin-bottom:28px}
+.winner-card{
+  background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,143,0,.1));
+  border:2px solid rgba(255,215,0,.3);
+  border-radius:20px;padding:30px;max-width:400px;margin:0 auto 28px;
+}
+.winner-emoji{font-size:4rem}
+.winner-name{font-size:2rem;font-weight:900;color:#ffd700;margin:8px 0 4px}
+.winner-score{font-size:1.2rem;color:#aaa}
+.btn-new-game{
+  padding:14px 40px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#e91e63,#c2185b);
+  color:#fff;font-size:1.1rem;font-weight:800;
+  cursor:pointer;font-family:'Heebo',Arial,sans-serif;transition:transform .15s;
+}
+.btn-new-game:hover{transform:scale(1.05)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:10px}
+
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">🛡️ בוחן תחבולה – פאנל מנהל</div>
+  <div class="topbar-status">
+    <span class="status-dot"></span>
+    <span id="player-count-top">0 חניכים מחוברים</span>
+    <span style="color:#555">|</span>
+    <span id="game-state-top">ממתין להתחלה</span>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <!-- Connected players -->
+    <div class="sidebar-title">👤 חניכים מחוברים</div>
+    <div id="player-list"><div class="players-empty">ממתין לחניכים...</div></div>
+
+    <br>
+
+    <!-- Question list -->
+    <div class="sidebar-title" id="q-list-title" style="display:none">📋 שאלות</div>
+    <div id="q-list"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-area">
+
+    <!-- LOBBY -->
+    <div id="view-lobby">
+      <div class="lobby-title">שעת מפקד</div>
+      <div class="lobby-desc">פאנל שליטה של המנהל | בוחן תחבולה – 20 שאלות</div>
+      <div class="waiting-badge">
+        <span id="lobby-player-count">0</span>
+        <span>חניכים מחוברים</span>
+      </div>
+      <div style="margin-bottom:20px">
+        <div class="sidebar-title" style="margin-bottom:10px">⏱ זמן לכל שאלה</div>
+        <div class="time-row">
+          <button class="time-opt" onclick="selectTime(30,this)">30 שניות</button>
+          <button class="time-opt sel" onclick="selectTime(60,this)">60 שניות</button>
+          <button class="time-opt" onclick="selectTime(90,this)">90 שניות</button>
+        </div>
+      </div>
+      <div class="lobby-info">פתח את <strong>quiz-player.html</strong> בכל מכשיר חניך ↗</div>
+      <button class="btn-start-game" id="btn-start-game" onclick="startGame()">🚀 התחל בוחן</button>
+    </div>
+
+    <!-- QUESTION CONTROL -->
+    <div id="view-question">
+      <div class="q-ctrl-header">
+        <div class="q-ctrl-title" id="q-ctrl-label">שאלה 1 מתוך 20</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:.8rem;color:#666">זמן שנותר</div>
+          <div class="ctrl-timer" id="ctrl-timer">60</div>
+        </div>
+      </div>
+
+      <div class="timer-bar-wrap"><div class="timer-bar" id="ctrl-timer-bar"></div></div>
+
+      <!-- Question box -->
+      <div class="q-box">
+        <div class="q-box-num" id="q-box-num">שאלה 1</div>
+        <div class="q-box-text" id="q-box-text"></div>
+      </div>
+
+      <!-- Answers -->
+      <div class="ans-grid" id="ans-grid"></div>
+
+      <!-- Response counter -->
+      <div class="resp-counter">
+        <div style="text-align:center">
+          <div class="resp-big" id="resp-count">0</div>
+          <div class="resp-label">תשובות התקבלו</div>
+        </div>
+        <div style="text-align:center">
+          <div class="resp-big" style="color:#4caf50" id="resp-correct">0</div>
+          <div class="resp-label">נכון</div>
+        </div>
+        <div style="text-align:center">
+          <div class="resp-big" style="color:#ff5252" id="resp-wrong">0</div>
+          <div class="resp-label">שגוי</div>
+        </div>
+        <div style="text-align:center">
+          <div class="resp-big" style="color:#aaa" id="resp-total">0</div>
+          <div class="resp-label">סה"כ חניכים</div>
+        </div>
+      </div>
+
+      <!-- Ctrl buttons -->
+      <div class="ctrl-buttons">
+        <button class="btn-ctrl btn-skip" onclick="skipQuestion()">⏭ דלג על שאלה</button>
+        <button class="btn-ctrl btn-end-q" id="btn-end-q" onclick="endQuestion()">⏹ סגור שאלה</button>
+        <button class="btn-ctrl btn-next-q" id="btn-next-q" onclick="nextQuestion()">▶ שאלה הבאה</button>
+        <button class="btn-ctrl btn-finish-game" id="btn-finish-game" onclick="finishGame()">🏆 סיים בוחן</button>
+      </div>
+
+      <!-- Leaderboard after question -->
+      <div class="lb-section" id="lb-section" style="display:none">
+        <div class="lb-section-title">🏆 לוח מובילים</div>
+        <div id="lb-rows"></div>
+      </div>
+    </div>
+
+    <!-- FINAL -->
+    <div id="view-final">
+      <div class="final-title">🏆 תוצאות סופיות</div>
+      <div class="final-sub" id="final-sub"></div>
+      <div class="winner-card" id="winner-card"></div>
+      <div id="final-lb"></div>
+      <br>
+      <button class="btn-new-game" onclick="newGame()">🔄 בוחן חדש</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================ DATA */
+const QUESTIONS = [
+  {q:'מהי ההגדרה היסודית של "תחבולה" לפי עקרונות המלחמה?',answers:['הוספת אמצעי הונאה לתוכנית המבצעית הקיימת.','דרך מחוכמת לעשיית מלחמה ע"י חיפוש תורפות האויב או גרימתן.','שימוש באמצעים טכנולוגיים מתקדמים שאינם מוכרים לאויב.','ביצוע איגוף עמוק של כוחות האויב.'],correct:1},
+  {q:'מהו הקשר בין תחבולה לרעיון המבצעי?',answers:['התחבולה היא תוספת אופציונלית לרעיון המרכזי.','התחבולה מתבצעת רק לאחר הרעיון המבצעי נכשל.','התחבולה היא מהותו של הרעיון המבצעי שסביבו מתגבשת שיטת הביצוע.','הרעיון המבצעי הוא הכלי הטקטי למימוש התחבולה האסטרטגית.'],correct:2},
+  {q:'מהי המטרה העיקרית של התחבולה מול האויב?',answers:['השמדה פיזית של כלל כוחות האויב.','הפתעת האויב כדי להוציאו מאיזונו ולמוטטו.','חיסכון בכוחות לוחמים על ידי שימוש באש.','שיפור המורל בקרב כוחותינו.'],correct:1},
+  {q:'לאיזה דרג מומלץ לכוון את מאמץ התחבולה באופן מיוחד?',answers:['לדרג הלוחם בשטח (החייל הפשוט).','למערך הלוגיסטי והמנהלתי של האויב.','לרמות הפיקוד של האויב, כדי להקרין שיתוק על הכפופים להן.','למערך המודיעין של האויב בלבד.'],correct:2},
+  {q:'מה נחשב לתנאי הכרחי להצלחת תחבולה?',answers:['סדר כוחות עדיף פי שלושה על האויב.','הכרת האויב, תורת הלחימה שלו, היערכותו וכוונותיו.','שימוש בכוחות מיוחדים בלבד.','תוכנית מבצעית פשוטה ככל הניתן.'],correct:1},
+  {q:'מהו ההבדל בין "הונאה" ל"הטעיה"?',answers:['אין הבדל, מדובר במילים נרדפות.','הונאה היא טקטית והטעיה היא אסטרטגית.','הונאה היא מאמץ ממושך לטעת הכרה כוזבת אצל האויב; הטעיה היא סדרת פעולות לקרב/מערכה קונקרטיים.','הטעיה נעשית ע"י המודיעין והונאה ע"י הכוחות המתמרנים.'],correct:2},
+  {q:'כיצד יכול מחקר קרקע לתרום לתחבולה?',answers:['במציאת שטחי כינוס בטוחים יותר.','באיתור עמדות ירי טובות יותר לארטילריה.','באפשרות לצלוח שטחים שהאויב סבור שהם בלתי עבירים.','מחקר קרקע אינו קשור לעקרון התחבולה.'],correct:2},
+  {q:'איזה סוג של הפתעה נוצר כאשר משתמשים בשיטות פעולה שאינן מוכרות לאויב?',answers:['הפתעה טכנולוגית.','הפתעה בתפיסת הלחימה.','הפתעה במקום ובזמן.','הפתעה בשיטות הפעולה.'],correct:3},
+  {q:'מה הדין לגבי ניצול הישגי ההפתעה שנוצרה עקב תחבולה?',answers:['יש להמתין להגעת העתודות לפני ניצול ההפתעה.','יש לנצל את ההישגים בטרם יתאושש האויב וימצא תגובה.','הפתעה היא הכרעה כשלעצמה, ולכן אין צורך בפעולה נוספת.','יש לעצור ולבצע הערכת מצב מחודשת למשך זמן ממושך.'],correct:1},
+  {q:'"תחבולה משפיעה בעיקר על..." – השלם:',answers:['יכולת האש של האויב.','תודעתו והבנתו של האויב.','קווי האספקה של האויב.','המהירות הפיזית של כוחות האויב.'],correct:1},
+  {q:'כיצד מתקשר עקרון ה"יוזמה והתקפיות" לתחבולה?',answers:['יוזמה מחליפה את הצורך בתחבולה.','נקיטת יוזמה תאלץ את האויב להגיב ותקשה עליו לסכל את התחבולה.','תחבולה היא תמיד הגנתית, בעוד יוזמה היא התקפית.','אין קשר בין שני העקרונות.'],correct:1},
+  {q:'איזה עקרון מלחמה עלול המפקד לזנוח לטובת יישום יוזמה ותחבולה?',answers:['דבקות במשימה.','רוח לחימה.','אבטחה, מיצוי הכוח וריכוז המאמץ.','פשטות.'],correct:2},
+  {q:'מהו "ניצול הצלחה" בהקשר של יוזמה?',answers:['פעולה אקראית שנובעת מהזדמנות בלתי צפויה.','דבר שאפשר וצריך לתכנן מראש ולהיערך אליו בשלב התכנון.','שימוש בעתודה בלבד.','הפסקת הלחימה כדי לחגוג את ההישג.'],correct:1},
+  {q:'מהי "גמישות תפיסתית"?',answers:['היכולת להחליף כוחות בשטח במהירות.','תפיסה המפחיתה מחשיבות המודיעין ומקבלת את אי-הוודאות כהנחת מוצא.','שימוש במגוון רחב של אמצעי לחימה.','מתן חופש פעולה מלא לחיילים.'],correct:1},
+  {q:'מדוע "הפתעה" כשלעצמה אינה נחשבת להכרעה?',answers:['כי האויב תמיד יכול לסגת.','כי הפתעה היא זמנית בלבד, ואם לא תנוצל, האויב יתאושש ויגיב.','כי הכרעה דורשת השמדה פיזית של 100% מהכוח.','כי הפתעה משפיעה רק על הדרג הטקטי.'],correct:1},
+  {q:'מהי "הטעיה" בתכנית המבצע?',answers:['השארת פרטים עמומים בפקודה.','סדרת פעולות המטעות את האויב לגבי סד"כ, מקום וזמן הקרב הקונקרטי.','שקר למפקדים הממונים לגבי יכולות היחידה.','תקיפה חזיתית ללא תחכום.'],correct:1},
+  {q:'כיצד עקרון ה"פשטות" משפיע על התחבולה?',answers:['תחבולה חייבת להיות מורכבת כדי להצליח.','פשטות התוכנית והשפה המשותפת מקלים על ביצוע שינויים ותחבולות בקרב.','עקרון הפשטות אוסר על שימוש בתחבולות.','פשטות נועדה רק לדרג הטקטי, ותחבולה רק לדרג המערכתי.'],correct:1},
+  {q:'מהו תפקיד המודיעין במימוש התחבולה והאבטחה?',answers:['המודיעין הוא המענה החסכוני ביותר לאבטחה ומאפשר לדעת היכן לרכז מאמץ ולבצע תחבולה.','המודיעין רק מאשר את מה שהמפקד כבר החליט.','המודיעין מחליף את הצורך בסיור פיזי.','תפקיד המודיעין הוא לבצע את ההונאה בעצמו.'],correct:0},
+  {q:'מהו ההבדל המהותי בין "גישת השחיקה" ל"גישת התמרון"?',answers:['גישת השחיקה מתמקדת בהשמדת כוחות האויב בחזית, בעוד שגישת התמרון חותרת לפירוק המערכת היריבה כאשר פוגעים במרכז הכובד שלה.','גישת השחיקה היא תמיד הגנתית, בעוד שגישת התמרון היא תמיד התקפית.','גישת השחיקה מופעלת רק בלילה, בעוד שגישת התמרון מופעלת ביום.','אין הבדל בין הגישות.'],correct:0},
+  {q:'האם לאויב בלתי סדור יש מרכזי כובד?',answers:['כן, כל קבוצה יש לה הגיון פעולה שמכיל את כלל הרכיבים שלה (המערכת).','לא, לאויב בלתי סדור אין מרכז כובד – מרכז כובד זה לצבאות בלבד.','כן, מרכז כובד משתנה מארגון לארגון ויש להמשיג אותו בצורה אחרת.','תשובות א\' + ג\' נכונות.'],correct:3}
+];
+const LETTERS=['א','ב','ג','ד'];
+const ANS_CLS=['a-c','b-c','c-c','d-c'];
+const P_COLORS=['#e91e63','#2196f3','#ff6f00','#00897b','#9c27b0','#f44336','#3f51b5','#009688','#ff9800','#795548'];
+const AVATARS=['🦁','🐯','🦊','🐺','🦅','🐉','🦋','🐬','🦄','🐸'];
+
+/* ============================================================ STATE */
+const ch = new BroadcastChannel('quiz-channel');
+let timePerQ = 60;
+let currentQ = 0;
+let gameState = 'lobby'; // lobby | question_active | question_ended | game_over
+let timerInt  = null;
+let timeLeft  = 60;
+let players   = new Map(); // pid -> {name, score, answers:{qi->ai}, colorIdx}
+let qAnswers  = {};        // qi -> {pid -> {ai, timeLeft}}
+let colorCounter = 0;
+
+ch.onmessage = e => {
+  const d = e.data;
+  if (d.type === 'PLAYER_JOIN')   handleJoin(d);
+  if (d.type === 'PLAYER_ANSWER') handleAnswer(d);
+  if (d.type === 'PING_REQUEST')  sendPing();
+};
+
+function handleJoin({pid, name}) {
+  if (!players.has(pid)) {
+    players.set(pid, {name, score:0, answers:{}, colorIdx: colorCounter++ % P_COLORS.length});
+  } else {
+    players.get(pid).name = name;
+  }
+  refreshPlayerList();
+  updateTopBar();
+  // if game already started, send current question
+  if (gameState === 'question_active') {
+    ch.postMessage({type:'QUESTION_START', qi:currentQ, timePerQ});
+  }
+}
+
+function handleAnswer({pid, qi, ai, timeLeft: tl}) {
+  if (!qAnswers[qi]) qAnswers[qi] = {};
+  if (qAnswers[qi][pid]) return; // already answered
+  qAnswers[qi][pid] = {ai, timeLeft: tl};
+  const p = players.get(pid);
+  if (p) {
+    p.answers[qi] = ai;
+    if (ai === QUESTIONS[qi].correct) {
+      const pts = Math.max(200, Math.round((tl / timePerQ) * 1000));
+      p.score += pts;
+    }
+  }
+  refreshResponseCounts();
+  refreshPlayerList();
+}
+
+function sendPing() {
+  ch.postMessage({type:'ADMIN_PONG'});
+}
+
+/* ============================================================ UI helpers */
+function selectTime(t, btn) {
+  timePerQ = t;
+  document.querySelectorAll('.time-opt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function refreshPlayerList() {
+  const ul = document.getElementById('player-list');
+  if (!players.size) { ul.innerHTML='<div class="players-empty">ממתין לחניכים...</div>'; return; }
+  ul.innerHTML='';
+  const sorted = [...players.values()].sort((a,b)=>b.score-a.score);
+  sorted.forEach(p => {
+    const answered = p.answers[currentQ] !== undefined;
+    const div = document.createElement('div');
+    div.className = 'player-card' + (answered?' answered':'');
+    div.innerHTML=`
+      <div class="p-avatar" style="background:${P_COLORS[p.colorIdx]};color:#fff">${AVATARS[p.colorIdx]}</div>
+      <div>
+        <div class="p-name">${p.name}</div>
+        <div class="p-score">${p.score.toLocaleString()} נק'</div>
+      </div>
+      <span class="p-badge ${answered?'badge-answered':'badge-waiting'}">${answered?'✓':'...'}</span>`;
+    ul.appendChild(div);
+  });
+  document.getElementById('lobby-player-count').textContent = players.size;
+}
+
+function updateTopBar() {
+  document.getElementById('player-count-top').textContent = `${players.size} חניכים מחוברים`;
+}
+
+function buildQuestionList() {
+  document.getElementById('q-list-title').style.display='block';
+  const list = document.getElementById('q-list');
+  list.innerHTML='';
+  QUESTIONS.forEach((q,i) => {
+    const div = document.createElement('div');
+    div.className = 'q-list-item' + (i===currentQ?' active-q':'') + (i<currentQ?' done-q':'');
+    div.id='qli-'+i;
+    div.innerHTML=`<div class="q-num-badge ${i<currentQ?'done':i===currentQ?'active':''}">${i+1}</div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${q.q.substring(0,30)}...</span>`;
+    div.onclick=()=>{ if(gameState==='question_ended') jumpToQuestion(i); };
+    list.appendChild(div);
+  });
+}
+
+function refreshResponseCounts() {
+  const ans   = qAnswers[currentQ] || {};
+  const total = players.size;
+  const count = Object.keys(ans).length;
+  const correct = Object.values(ans).filter(a=>a.ai===QUESTIONS[currentQ].correct).length;
+  document.getElementById('resp-count').textContent   = count;
+  document.getElementById('resp-correct').textContent = correct;
+  document.getElementById('resp-wrong').textContent   = count - correct;
+  document.getElementById('resp-total').textContent   = total;
+  // update vote bars
+  for (let i=0;i<4;i++){
+    const bar = document.getElementById('vote-bar-'+i);
+    const cnt = document.getElementById('vote-cnt-'+i);
+    if (!bar||!cnt) continue;
+    const n = Object.values(ans).filter(a=>a.ai===i).length;
+    bar.style.width = count>0 ? (n/total*100)+'%' : '0%';
+    cnt.textContent = n||'';
+  }
+  // auto-mark all answered
+  if (count >= total && total > 0 && gameState==='question_active') {
+    // auto end after 1s
+    clearTimeout(window._autoEnd);
+    window._autoEnd = setTimeout(endQuestion, 1500);
+  }
+}
+
+/* ============================================================ GAME FLOW */
+function startGame() {
+  gameState = 'question_active';
+  currentQ  = 0;
+  qAnswers  = {};
+  players.forEach(p=>{ p.score=0; p.answers={}; });
+  buildQuestionList();
+  document.getElementById('view-lobby').style.display='none';
+  document.getElementById('view-question').style.display='block';
+  document.getElementById('game-state-top').textContent='בוחן פעיל';
+  showQuestion();
+}
+
+function showQuestion() {
+  gameState = 'question_active';
+  const q = QUESTIONS[currentQ];
+  document.getElementById('q-ctrl-label').textContent = `שאלה ${currentQ+1} מתוך ${QUESTIONS.length}`;
+  document.getElementById('q-box-num').textContent    = `שאלה ${currentQ+1}`;
+  document.getElementById('q-box-text').textContent   = q.q;
+  document.getElementById('lb-section').style.display = 'none';
+  document.getElementById('btn-end-q').style.display  = 'inline-block';
+  document.getElementById('btn-skip').style.display   = 'inline-block';
+  document.getElementById('btn-next-q').style.display = 'none';
+  document.getElementById('btn-finish-game').style.display = 'none';
+
+  // answers
+  const grid = document.getElementById('ans-grid');
+  grid.innerHTML='';
+  q.answers.forEach((ans,i)=>{
+    const div=document.createElement('div');
+    div.className=`ans-card ${ANS_CLS[i]}`;
+    div.innerHTML=`<div class="ans-ltr">${LETTERS[i]}</div><span style="flex:1">${ans}</span>
+      <span class="ans-vote-count" id="vote-cnt-${i}"></span>
+      <div class="ans-vote-bar" id="vote-bar-${i}" style="width:0%"></div>`;
+    grid.appendChild(div);
+  });
+  refreshResponseCounts();
+
+  // timer
+  timeLeft = timePerQ;
+  const timerEl = document.getElementById('ctrl-timer');
+  timerEl.textContent = timePerQ; timerEl.className='ctrl-timer';
+  const bar = document.getElementById('ctrl-timer-bar');
+  bar.style.animation='none'; void bar.offsetHeight;
+  bar.style.animationDuration=timePerQ+'s';
+  bar.style.animation=`timerShrink ${timePerQ}s linear forwards`;
+
+  clearInterval(timerInt);
+  timerInt = setInterval(()=>{
+    timeLeft--;
+    timerEl.textContent = timeLeft;
+    if (timeLeft<=5) timerEl.className='ctrl-timer urgent';
+    if (timeLeft<=0) { clearInterval(timerInt); endQuestion(); }
+  },1000);
+
+  // update q list highlight
+  document.querySelectorAll('.q-list-item').forEach((el,i)=>{
+    el.className='q-list-item'+(i===currentQ?' active-q':i<currentQ?' done-q':'');
+    const badge=el.querySelector('.q-num-badge');
+    if(badge) badge.className='q-num-badge'+(i===currentQ?' active':i<currentQ?' done':'');
+  });
+
+  // broadcast
+  ch.postMessage({type:'QUESTION_START', qi:currentQ, timePerQ});
+}
+
+function endQuestion() {
+  clearInterval(timerInt);
+  if (gameState==='question_ended') return;
+  gameState='question_ended';
+  const q = QUESTIONS[currentQ];
+
+  // highlight correct answer
+  const cards = document.querySelectorAll('.ans-card');
+  cards.forEach((c,i)=>{ if(i===q.correct) c.classList.add('correct-ans'); });
+
+  // broadcast
+  ch.postMessage({type:'QUESTION_END', qi:currentQ, correctIndex:q.correct, scores:getScores()});
+
+  document.getElementById('ctrl-timer').textContent='✓';
+  document.getElementById('ctrl-timer').className='ctrl-timer';
+  document.getElementById('btn-end-q').style.display='none';
+  document.getElementById('btn-skip').style.display='none';
+  const isLast = currentQ >= QUESTIONS.length-1;
+  document.getElementById('btn-next-q').style.display     = isLast?'none':'inline-block';
+  document.getElementById('btn-finish-game').style.display= isLast?'inline-block':'none';
+
+  showLeaderboard();
+}
+
+function showLeaderboard() {
+  const el = document.getElementById('lb-section');
+  el.style.display='block';
+  const rows = document.getElementById('lb-rows');
+  rows.innerHTML='';
+  const sorted = [...players.values()].sort((a,b)=>b.score-a.score).slice(0,5);
+  sorted.forEach((p,ri)=>{
+    const cls=ri===0?'r1':ri===1?'r2':ri===2?'r3':'rn';
+    const row=document.createElement('div');
+    row.className='lb-row'; row.style.animationDelay=(ri*0.07)+'s';
+    row.innerHTML=`
+      <div class="lb-rank ${cls}">${ri+1}</div>
+      <div class="lb-name">${p.name}</div>
+      <div class="lb-correct">${p.answers[currentQ]===QUESTIONS[currentQ].correct?'+✓':''}</div>
+      <div class="lb-pts">${p.score.toLocaleString()}</div>`;
+    rows.appendChild(row);
+  });
+}
+
+function nextQuestion() {
+  currentQ++;
+  qAnswers[currentQ]={};
+  showQuestion();
+}
+
+function skipQuestion() {
+  if(gameState==='question_active'){
+    clearInterval(timerInt);
+    ch.postMessage({type:'QUESTION_SKIP', qi:currentQ});
+    if (currentQ < QUESTIONS.length-1) { currentQ++; showQuestion(); }
+    else finishGame();
+  }
+}
+
+function jumpToQuestion(qi) {
+  currentQ = qi;
+  if (!qAnswers[qi]) qAnswers[qi]={};
+  showQuestion();
+}
+
+function finishGame() {
+  clearInterval(timerInt);
+  gameState='game_over';
+  ch.postMessage({type:'GAME_END', scores:getScores()});
+  document.getElementById('view-question').style.display='none';
+  document.getElementById('view-final').style.display='block';
+  const sorted=[...players.values()].sort((a,b)=>b.score-a.score);
+  const winner=sorted[0];
+  document.getElementById('game-state-top').textContent='סיום';
+  document.getElementById('final-sub').textContent=`${players.size} חניכים השתתפו | ${QUESTIONS.length} שאלות`;
+  if(winner){
+    document.getElementById('winner-card').innerHTML=`
+      <div class="winner-emoji">🥇</div>
+      <div class="winner-name">${winner.name}</div>
+      <div class="winner-score">${winner.score.toLocaleString()} נקודות | ${Object.values(winner.answers).filter((ai,i)=>ai===QUESTIONS[Object.keys(winner.answers)[i]]?.correct).length} תשובות נכונות</div>`;
+  }
+  const fl=document.getElementById('final-lb');
+  fl.innerHTML='';
+  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  sorted.forEach((p,ri)=>{
+    const row=document.createElement('div');
+    row.className='lb-row'; row.style.animationDelay=(ri*0.1)+'s';
+    const correctCount=Object.entries(p.answers).filter(([qi,ai])=>ai===QUESTIONS[+qi]?.correct).length;
+    row.innerHTML=`<div style="font-size:1.3rem;width:30px">${medals[ri]||''}</div>
+      <div class="lb-name">${p.name}</div>
+      <div class="lb-correct">✅ ${correctCount}/${QUESTIONS.length}</div>
+      <div class="lb-pts">${p.score.toLocaleString()}</div>`;
+    fl.appendChild(row);
+  });
+}
+
+function getScores() {
+  const out={};
+  players.forEach((p,pid)=>{ out[pid]={name:p.name, score:p.score}; });
+  return out;
+}
+
+function newGame() {
+  players.forEach(p=>{ p.score=0; p.answers={}; });
+  currentQ=0; qAnswers={};
+  document.getElementById('view-final').style.display='none';
+  document.getElementById('view-lobby').style.display='flex';
+  refreshPlayerList();
+  gameState='lobby';
+  document.getElementById('game-state-top').textContent='ממתין להתחלה';
+  ch.postMessage({type:'RESET'});
+}
+
+// Broadcast keepalive so players know admin is present
+setInterval(()=>ch.postMessage({type:'ADMIN_ALIVE'}), 2000);
+</script>
+</body>
+</html>

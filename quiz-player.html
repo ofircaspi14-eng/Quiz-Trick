@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>בוחן תחבולה – חניך</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Heebo',Arial,sans-serif;
+  background:linear-gradient(135deg,#f0f4ff 0%,#e8f0fe 50%,#fce4ec 100%);
+  color:#1a1a2e;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+}
+
+.screen{display:none;width:100%;max-width:800px;padding:20px;animation:fadeIn .35s ease}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounceIn{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes timerShrink{from{width:100%}to{width:0%}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ===== JOIN ===== */
+.join-logo{
+  font-size:2.6rem;font-weight:900;
+  background:linear-gradient(135deg,#e91e63,#ff6f00,#1565c0);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  text-align:center;margin-bottom:6px;
+}
+.join-sub{color:#666;font-size:.95rem;margin-bottom:28px;text-align:center}
+.join-card{
+  background:#fff;border-radius:22px;padding:36px 40px;
+  width:100%;max-width:480px;box-shadow:0 8px 40px rgba(0,0,0,.1);
+  text-align:center;
+}
+.join-card h2{font-size:1.3rem;color:#1a1a2e;margin-bottom:6px}
+.join-card p{color:#888;font-size:.88rem;margin-bottom:24px}
+.inp-name{
+  width:100%;padding:14px 18px;border-radius:14px;
+  border:2px solid #e0e0e0;background:#f9f9f9;
+  font-size:1.15rem;font-family:'Heebo',Arial,sans-serif;
+  color:#1a1a2e;text-align:center;outline:none;
+  margin-bottom:16px;transition:border-color .2s;
+}
+.inp-name:focus{border-color:#e91e63;background:#fff}
+.btn-join{
+  width:100%;padding:15px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,#e91e63,#c2185b);
+  color:#fff;font-size:1.15rem;font-weight:900;
+  cursor:pointer;font-family:'Heebo',Arial,sans-serif;
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-join:hover{transform:scale(1.03);box-shadow:0 6px 24px rgba(233,30,99,.4)}
+
+/* ===== WAITING ===== */
+.waiting-wrap{text-align:center}
+.wait-avatar{
+  font-size:5rem;margin-bottom:16px;
+  animation:pulse 2s ease-in-out infinite;
+}
+.wait-name{font-size:2rem;font-weight:900;margin-bottom:8px}
+.wait-msg{font-size:1.05rem;color:#777;margin-bottom:24px}
+.wait-dots{display:flex;gap:8px;justify-content:center;margin-bottom:24px}
+.dot-anim{
+  width:12px;height:12px;border-radius:50%;background:#e91e63;
+  animation:pulse 1.2s ease-in-out infinite;
+}
+.dot-anim:nth-child(2){animation-delay:.2s;background:#2196f3}
+.dot-anim:nth-child(3){animation-delay:.4s;background:#ff6f00}
+.admin-status{
+  display:inline-block;padding:8px 20px;border-radius:20px;
+  font-size:.8rem;font-weight:700;
+}
+.admin-online{background:#e8f5e9;color:#2e7d32}
+.admin-offline{background:#fff3e0;color:#e65100}
+
+/* ===== QUESTION ===== */
+.q-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:#fff;border-radius:16px;padding:12px 20px;
+  width:100%;margin-bottom:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);
+}
+.q-badge{
+  background:linear-gradient(135deg,#1565c0,#0d47a1);
+  color:#fff;font-size:.82rem;font-weight:700;
+  padding:4px 14px;border-radius:20px;
+}
+.timer-big{font-size:3rem;font-weight:900;color:#1565c0;line-height:1}
+.timer-big.urgent{color:#e91e63;animation:pulse .4s ease infinite}
+.score-chip{font-size:1.1rem;font-weight:900;color:#e91e63}
+.score-lbl{font-size:.68rem;color:#aaa;font-weight:600}
+
+.timer-bar-wrap{width:100%;height:8px;background:#e0e0e0;border-radius:8px;overflow:hidden;margin-bottom:12px}
+.timer-bar{height:100%;border-radius:8px;background:linear-gradient(90deg,#1565c0,#e91e63);animation:timerShrink linear forwards}
+
+.q-card{
+  background:#fff;border-radius:20px;padding:24px 26px;
+  width:100%;margin-bottom:16px;
+  box-shadow:0 4px 18px rgba(0,0,0,.07);
+  min-height:90px;display:flex;align-items:center;
+}
+.q-num-lbl{font-size:.72rem;color:#bbb;font-weight:600;display:block;margin-bottom:4px}
+.q-text{font-size:1.25rem;font-weight:700;line-height:1.6;color:#1a1a2e}
+
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.ans-btn{
+  padding:18px 14px;border-radius:16px;border:none;cursor:pointer;
+  font-size:1rem;font-weight:700;font-family:'Heebo',Arial,sans-serif;
+  color:#fff;text-align:right;display:flex;align-items:center;gap:10px;
+  transition:transform .12s,box-shadow .2s,opacity .2s;
+}
+.ans-btn:hover:not(:disabled){transform:scale(1.03);box-shadow:0 8px 22px rgba(0,0,0,.2)}
+.ans-btn:active:not(:disabled){transform:scale(.97)}
+.ans-btn:disabled{cursor:not-allowed}
+.a-btn{background:linear-gradient(135deg,#ff5252,#d32f2f)}
+.b-btn{background:linear-gradient(135deg,#2979ff,#1565c0)}
+.c-btn{background:linear-gradient(135deg,#ffab00,#e65100)}
+.d-btn{background:linear-gradient(135deg,#00e676,#00897b)}
+.ans-icon{width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.22);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;flex-shrink:0}
+.ans-text{flex:1;line-height:1.4}
+
+.ans-btn.correct{box-shadow:0 0 0 4px #00e676,0 8px 28px rgba(0,230,118,.35)!important;opacity:1!important;animation:pop .4s ease}
+.ans-btn.wrong{animation:shake .4s ease;opacity:.3!important}
+.ans-btn.reveal{box-shadow:0 0 0 4px #00e676!important;opacity:1!important}
+.ans-btn.faded{opacity:.25}
+
+/* ===== FEEDBACK ===== */
+.feedback{
+  display:none;padding:18px;border-radius:14px;
+  font-size:1.15rem;font-weight:800;width:100%;
+  text-align:center;margin-top:12px;animation:bounceIn .4s ease;
+}
+.feedback.show{display:block}
+.fb-correct{background:linear-gradient(135deg,#00c853,#00897b);color:#fff}
+.fb-wrong{background:linear-gradient(135deg,#ff5252,#d32f2f);color:#fff}
+.fb-timeout{background:linear-gradient(135deg,#ffab00,#e65100);color:#fff}
+
+.waiting-next{
+  display:none;width:100%;background:#fff;border-radius:14px;
+  padding:16px;text-align:center;margin-top:12px;color:#888;font-size:.9rem;
+  animation:bounceIn .4s ease;
+}
+.waiting-next.show{display:block}
+
+/* ===== LEADERBOARD (between questions) ===== */
+#screen-lb{text-align:center}
+.lb-card{background:#fff;border-radius:22px;padding:28px 30px;width:100%;max-width:560px;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+.lb-header-big{font-size:1.6rem;font-weight:900;margin-bottom:4px;color:#1a1a2e}
+.lb-header-sub{color:#888;font-size:.88rem;margin-bottom:20px}
+.lb-row-p{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid #f5f5f5;
+  animation:slideUp .3s ease backwards;
+}
+.lb-row-p:last-child{border-bottom:none}
+.lb-rank-badge{
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:.82rem;flex-shrink:0;
+}
+.rk1{background:linear-gradient(135deg,#ffd700,#ff8f00);color:#fff}
+.rk2{background:linear-gradient(135deg,#b0bec5,#607d8b);color:#fff}
+.rk3{background:linear-gradient(135deg,#ff7043,#bf360c);color:#fff}
+.rkn{background:#f0f0f0;color:#888}
+.lb-me{background:rgba(233,30,99,.07);border-radius:8px;padding:0 8px}
+.lb-p-name{flex:1;font-weight:700;font-size:.95rem;text-align:right;color:#1a1a2e}
+.lb-p-score{font-size:1.1rem;font-weight:900;color:#e91e63}
+.lb-p-pts-gained{font-size:.75rem;color:#00897b;font-weight:700}
+
+.wait-for-next{color:#aaa;font-size:.9rem;margin-top:16px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+
+/* ===== FINAL ===== */
+#screen-final{text-align:center}
+.final-card{background:#fff;border-radius:22px;padding:36px;width:100%;max-width:520px;box-shadow:0 8px 40px rgba(0,0,0,.1)}
+.final-emoji{font-size:4.5rem;margin-bottom:10px}
+.final-name{font-size:1.8rem;font-weight:900;margin-bottom:6px}
+.final-score-big{
+  font-size:3.5rem;font-weight:900;
+  background:linear-gradient(135deg,#f5a623,#e91e63);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:4px;
+}
+.final-stats-row{display:flex;gap:14px;justify-content:center;margin:20px 0}
+.fstat{flex:1;background:#f9f9f9;border-radius:12px;padding:14px}
+.fstat-val{font-size:1.8rem;font-weight:900}
+.fstat-lbl{font-size:.75rem;color:#aaa;margin-top:2px}
+.btn-rejoin{
+  margin-top:20px;padding:14px 40px;border-radius:50px;border:none;
+  background:linear-gradient(135deg,#e91e63,#c2185b);
+  color:#fff;font-size:1.05rem;font-weight:800;
+  cursor:pointer;font-family:'Heebo',Arial,sans-serif;transition:transform .15s;
+}
+.btn-rejoin:hover{transform:scale(1.05)}
+
+.confetti-piece{position:fixed;width:10px;height:14px;border-radius:3px;
+  top:-20px;animation:confettiFall linear forwards;pointer-events:none;z-index:9999}
+
+/* progress dots */
+.prog-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;width:100%}
+.pd{width:14px;height:14px;border-radius:50%;background:#ddd;transition:background .3s}
+.pd.correct{background:#00c853}.pd.wrong{background:#ff5252}.pd.timeout{background:#ffab00}
+.pd.current{background:#1565c0;animation:pulse .8s ease infinite}
+
+@media(max-width:560px){
+  .ans-grid{grid-template-columns:1fr}
+  .timer-big{font-size:2rem}
+  .q-text{font-size:1.05rem}
+}
+</style>
+</head>
+<body>
+
+<!-- JOIN -->
+<div id="screen-join" class="screen active">
+  <div class="join-logo">בוחן תחבולה</div>
+  <div class="join-sub">שעת מפקד | הכנס את שמך כדי להצטרף</div>
+  <div class="join-card">
+    <h2>הצטרף לבוחן</h2>
+    <p>פתח את <strong>quiz-admin.html</strong> בטאב של המנהל<br>ואז הצטרף מכאן</p>
+    <input class="inp-name" id="inp-name" type="text" placeholder="השם שלך..." maxlength="16"
+      onkeydown="if(event.key==='Enter')joinGame()"/>
+    <button class="btn-join" onclick="joinGame()">🚀 הצטרף לבוחן!</button>
+  </div>
+</div>
+
+<!-- WAITING FOR GAME -->
+<div id="screen-waiting" class="screen">
+  <div class="waiting-wrap">
+    <div class="wait-avatar" id="wait-avatar">🦁</div>
+    <div class="wait-name" id="wait-name"></div>
+    <div class="wait-msg">ממתין לתחילת הבוחן...</div>
+    <div class="wait-dots"><div class="dot-anim"></div><div class="dot-anim"></div><div class="dot-anim"></div></div>
+    <span class="admin-status" id="admin-status">⚠️ ממתין למנהל...</span>
+  </div>
+</div>
+
+<!-- QUESTION -->
+<div id="screen-question" class="screen">
+  <div class="q-topbar">
+    <div>
+      <div class="q-badge" id="q-badge">שאלה 1/20</div>
+      <div style="font-size:.72rem;color:#aaa;margin-top:3px" id="my-name-top"></div>
+    </div>
+    <div style="text-align:center">
+      <div class="timer-big" id="timer-big">60</div>
+      <div style="font-size:.6rem;color:#aaa;letter-spacing:.5px">שניות</div>
+    </div>
+    <div style="text-align:left">
+      <div class="score-chip" id="score-chip">0</div>
+      <div class="score-lbl">נקודות</div>
+    </div>
+  </div>
+
+  <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+  <div class="prog-dots" id="prog-dots"></div>
+
+  <div class="q-card">
+    <div style="width:100%">
+      <span class="q-num-lbl" id="q-num-lbl">שאלה 1</span>
+      <div class="q-text" id="q-text"></div>
+    </div>
+  </div>
+
+  <div class="ans-grid" id="ans-grid"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="waiting-next" id="waiting-next">⏳ ממתין לשאלה הבאה...</div>
+</div>
+
+<!-- LEADERBOARD (between questions) -->
+<div id="screen-lb" class="screen">
+  <div class="lb-card">
+    <div class="lb-header-big">🏆 לוח מובילים</div>
+    <div class="lb-header-sub" id="lb-sub">אחרי שאלה 1</div>
+    <div id="lb-rows-p"></div>
+    <div class="wait-for-next">
+      <div class="dot-anim"></div>
+      ממתין לשאלה הבאה מהמנהל
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div id="screen-final" class="screen">
+  <div class="final-card">
+    <div class="final-emoji" id="final-emoji">🏆</div>
+    <div class="final-name" id="final-name"></div>
+    <div class="final-score-big" id="final-score"></div>
+    <div style="color:#aaa;font-size:.85rem;margin-bottom:4px">נקודות סופיות</div>
+    <div class="final-stats-row">
+      <div class="fstat"><div class="fstat-val" style="color:#00c853" id="f-correct">0</div><div class="fstat-lbl">נכון</div></div>
+      <div class="fstat"><div class="fstat-val" style="color:#ff5252" id="f-wrong">0</div><div class="fstat-lbl">שגוי</div></div>
+      <div class="fstat"><div class="fstat-val" style="color:#ffab00" id="f-timeout">0</div><div class="fstat-lbl">פג זמן</div></div>
+    </div>
+    <div id="final-msg" style="color:#555;font-size:1rem;margin-bottom:16px"></div>
+    <button class="btn-rejoin" onclick="rejoin()">🔄 שחק שוב</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS=[
+  {q:'מהי ההגדרה היסודית של "תחבולה" לפי עקרונות המלחמה?',answers:['הוספת אמצעי הונאה לתוכנית המבצעית הקיימת.','דרך מחוכמת לעשיית מלחמה ע"י חיפוש תורפות האויב או גרימתן.','שימוש באמצעים טכנולוגיים מתקדמים שאינם מוכרים לאויב.','ביצוע איגוף עמוק של כוחות האויב.'],correct:1},
+  {q:'מהו הקשר בין תחבולה לרעיון המבצעי?',answers:['התחבולה היא תוספת אופציונלית לרעיון המרכזי.','התחבולה מתבצעת רק לאחר הרעיון המבצעי נכשל.','התחבולה היא מהותו של הרעיון המבצעי שסביבו מתגבשת שיטת הביצוע.','הרעיון המבצעי הוא הכלי הטקטי למימוש התחבולה האסטרטגית.'],correct:2},
+  {q:'מהי המטרה העיקרית של התחבולה מול האויב?',answers:['השמדה פיזית של כלל כוחות האויב.','הפתעת האויב כדי להוציאו מאיזונו ולמוטטו.','חיסכון בכוחות לוחמים על ידי שימוש באש.','שיפור המורל בקרב כוחותינו.'],correct:1},
+  {q:'לאיזה דרג מומלץ לכוון את מאמץ התחבולה באופן מיוחד?',answers:['לדרג הלוחם בשטח (החייל הפשוט).','למערך הלוגיסטי והמנהלתי של האויב.','לרמות הפיקוד של האויב, כדי להקרין שיתוק על הכפופים להן.','למערך המודיעין של האויב בלבד.'],correct:2},
+  {q:'מה נחשב לתנאי הכרחי להצלחת תחבולה?',answers:['סדר כוחות עדיף פי שלושה על האויב.','הכרת האויב, תורת הלחימה שלו, היערכותו וכוונותיו.','שימוש בכוחות מיוחדים בלבד.','תוכנית מבצעית פשוטה ככל הניתן.'],correct:1},
+  {q:'מהו ההבדל בין "הונאה" ל"הטעיה"?',answers:['אין הבדל, מדובר במילים נרדפות.','הונאה היא טקטית והטעיה היא אסטרטגית.','הונאה היא מאמץ ממושך לטעת הכרה כוזבת אצל האויב; הטעיה היא סדרת פעולות לקרב/מערכה קונקרטיים.','הטעיה נעשית ע"י המודיעין והונאה ע"י הכוחות המתמרנים.'],correct:2},
+  {q:'כיצד יכול מחקר קרקע לתרום לתחבולה?',answers:['במציאת שטחי כינוס בטוחים יותר.','באיתור עמדות ירי טובות יותר לארטילריה.','באפשרות לצלוח שטחים שהאויב סבור שהם בלתי עבירים.','מחקר קרקע אינו קשור לעקרון התחבולה.'],correct:2},
+  {q:'איזה סוג של הפתעה נוצר כאשר משתמשים בשיטות פעולה שאינן מוכרות לאויב?',answers:['הפתעה טכנולוגית.','הפתעה בתפיסת הלחימה.','הפתעה במקום ובזמן.','הפתעה בשיטות הפעולה.'],correct:3},
+  {q:'מה הדין לגבי ניצול הישגי ההפתעה שנוצרה עקב תחבולה?',answers:['יש להמתין להגעת העתודות לפני ניצול ההפתעה.','יש לנצל את ההישגים בטרם יתאושש האויב וימצא תגובה.','הפתעה היא הכרעה כשלעצמה, ולכן אין צורך בפעולה נוספת.','יש לעצור ולבצע הערכת מצב מחודשת למשך זמן ממושך.'],correct:1},
+  {q:'"תחבולה משפיעה בעיקר על..." – השלם:',answers:['יכולת האש של האויב.','תודעתו והבנתו של האויב.','קווי האספקה של האויב.','המהירות הפיזית של כוחות האויב.'],correct:1},
+  {q:'כיצד מתקשר עקרון ה"יוזמה והתקפיות" לתחבולה?',answers:['יוזמה מחליפה את הצורך בתחבולה.','נקיטת יוזמה תאלץ את האויב להגיב ותקשה עליו לסכל את התחבולה.','תחבולה היא תמיד הגנתית, בעוד יוזמה היא התקפית.','אין קשר בין שני העקרונות.'],correct:1},
+  {q:'איזה עקרון מלחמה עלול המפקד לזנוח לטובת יישום יוזמה ותחבולה?',answers:['דבקות במשימה.','רוח לחימה.','אבטחה, מיצוי הכוח וריכוז המאמץ.','פשטות.'],correct:2},
+  {q:'מהו "ניצול הצלחה" בהקשר של יוזמה?',answers:['פעולה אקראית שנובעת מהזדמנות בלתי צפויה.','דבר שאפשר וצריך לתכנן מראש ולהיערך אליו בשלב התכנון.','שימוש בעתודה בלבד.','הפסקת הלחימה כדי לחגוג את ההישג.'],correct:1},
+  {q:'מהי "גמישות תפיסתית"?',answers:['היכולת להחליף כוחות בשטח במהירות.','תפיסה המפחיתה מחשיבות המודיעין ומקבלת את אי-הוודאות כהנחת מוצא.','שימוש במגוון רחב של אמצעי לחימה.','מתן חופש פעולה מלא לחיילים.'],correct:1},
+  {q:'מדוע "הפתעה" כשלעצמה אינה נחשבת להכרעה?',answers:['כי האויב תמיד יכול לסגת.','כי הפתעה היא זמנית בלבד, ואם לא תנוצל, האויב יתאושש ויגיב.','כי הכרעה דורשת השמדה פיזית של 100% מהכוח.','כי הפתעה משפיעה רק על הדרג הטקטי.'],correct:1},
+  {q:'מהי "הטעיה" בתכנית המבצע?',answers:['השארת פרטים עמומים בפקודה.','סדרת פעולות המטעות את האויב לגבי סד"כ, מקום וזמן הקרב הקונקרטי.','שקר למפקדים הממונים לגבי יכולות היחידה.','תקיפה חזיתית ללא תחכום.'],correct:1},
+  {q:'כיצד עקרון ה"פשטות" משפיע על התחבולה?',answers:['תחבולה חייבת להיות מורכבת כדי להצליח.','פשטות התוכנית והשפה המשותפת מקלים על ביצוע שינויים ותחבולות בקרב.','עקרון הפשטות אוסר על שימוש בתחבולות.','פשטות נועדה רק לדרג הטקטי, ותחבולה רק לדרג המערכתי.'],correct:1},
+  {q:'מהו תפקיד המודיעין במימוש התחבולה והאבטחה?',answers:['המודיעין הוא המענה החסכוני ביותר לאבטחה ומאפשר לדעת היכן לרכז מאמץ ולבצע תחבולה.','המודיעין רק מאשר את מה שהמפקד כבר החליט.','המודיעין מחליף את הצורך בסיור פיזי.','תפקיד המודיעין הוא לבצע את ההונאה בעצמו.'],correct:0},
+  {q:'מהו ההבדל המהותי בין "גישת השחיקה" ל"גישת התמרון"?',answers:['גישת השחיקה מתמקדת בהשמדת כוחות האויב בחזית, בעוד שגישת התמרון חותרת לפירוק המערכת היריבה כאשר פוגעים במרכז הכובד שלה.','גישת השחיקה היא תמיד הגנתית, בעוד שגישת התמרון היא תמיד התקפית.','גישת השחיקה מופעלת רק בלילה, בעוד שגישת התמרון מופעלת ביום.','אין הבדל בין הגישות.'],correct:0},
+  {q:'האם לאויב בלתי סדור יש מרכזי כובד?',answers:['כן, כל קבוצה יש לה הגיון פעולה שמכיל את כלל הרכיבים שלה (המערכת).','לא, לאויב בלתי סדור אין מרכז כובד – מרכז כובד זה לצבאות בלבד.','כן, מרכז כובד משתנה מארגון לארגון ויש להמשיג אותו בצורה אחרת.','תשובות א\' + ג\' נכונות.'],correct:3}
+];
+const LETTERS=['א','ב','ג','ד'];
+const BTN_CLS=['a-btn','b-btn','c-btn','d-btn'];
+const AVATARS=['🦁','🐯','🦊','🐺','🦅','🐉','🦋','🐬','🦄','🐸'];
+const P_COLORS=['#e91e63','#2196f3','#ff6f00','#00897b','#9c27b0','#f44336','#3f51b5','#009688','#ff9800','#795548'];
+
+/* ============================================================ STATE */
+const ch = new BroadcastChannel('quiz-channel');
+const myId = 'p_' + Math.random().toString(36).slice(2,10);
+let myName     = '';
+let myAvatar   = AVATARS[Math.floor(Math.random()*AVATARS.length)];
+let myColor    = P_COLORS[Math.floor(Math.random()*P_COLORS.length)];
+let myScore    = 0;
+let myCorrect  = 0;
+let myWrong    = 0;
+let myTimeout  = 0;
+let currentQ   = -1;
+let timePerQ   = 60;
+let answered   = false;
+let timerInt   = null;
+let timeLeft   = 60;
+let adminAlive = false;
+let dotStates  = [];  // 'correct'|'wrong'|'timeout'|''
+let lastScores = null;
+
+ch.onmessage = e => {
+  const d = e.data;
+  if (d.type==='ADMIN_ALIVE')     { adminAlive=true; updateAdminStatus(); }
+  if (d.type==='ADMIN_PONG')      { adminAlive=true; updateAdminStatus(); }
+  if (d.type==='QUESTION_START')  handleQuestionStart(d);
+  if (d.type==='QUESTION_END')    handleQuestionEnd(d);
+  if (d.type==='QUESTION_SKIP')   handleSkip(d);
+  if (d.type==='GAME_END')        handleGameEnd(d);
+  if (d.type==='RESET')           handleReset();
+};
+
+function updateAdminStatus(){
+  const el=document.getElementById('admin-status');
+  if(el) el.className='admin-status admin-online', el.textContent='✅ המנהל מחובר';
+}
+
+setInterval(()=>{
+  if(adminAlive){ adminAlive=false; }
+  else{
+    const el=document.getElementById('admin-status');
+    if(el) el.className='admin-status admin-offline', el.textContent='⚠️ ממתין למנהל...';
+  }
+}, 5000);
+
+/* ============================================================ JOIN */
+function joinGame(){
+  const n = document.getElementById('inp-name').value.trim();
+  myName = n || 'חניך';
+  const aIdx = AVATARS.indexOf(myAvatar);
+  document.getElementById('wait-avatar').textContent = myAvatar;
+  document.getElementById('wait-name').textContent   = myName;
+  document.getElementById('my-name-top').textContent = myName;
+  showScreen('screen-waiting');
+  // broadcast join
+  ch.postMessage({type:'PLAYER_JOIN', pid:myId, name:myName});
+  // ping admin
+  ch.postMessage({type:'PING_REQUEST'});
+}
+
+/* ============================================================ QUESTION */
+function handleQuestionStart({qi, timePerQ: tpq}){
+  timePerQ = tpq || 60;
+  currentQ = qi;
+  answered = false;
+  timeLeft = timePerQ;
+
+  if (dotStates.length < qi) dotStates.push('');
+
+  const q = QUESTIONS[qi];
+  document.getElementById('q-badge').textContent = `שאלה ${qi+1}/${QUESTIONS.length}`;
+  document.getElementById('q-num-lbl').textContent = `שאלה ${qi+1}`;
+  document.getElementById('q-text').textContent   = q.q;
+  document.getElementById('score-chip').textContent = myScore.toLocaleString();
+  document.getElementById('feedback').className   = 'feedback';
+  document.getElementById('waiting-next').className = 'waiting-next';
+
+  // progress dots
+  buildDots(qi);
+
+  // answers
+  const grid = document.getElementById('ans-grid');
+  grid.innerHTML='';
+  q.answers.forEach((ans,i)=>{
+    const btn=document.createElement('button');
+    btn.className=`ans-btn ${BTN_CLS[i]}`;
+    btn.innerHTML=`<span class="ans-icon">${LETTERS[i]}</span><span class="ans-text">${ans}</span>`;
+    btn.onclick=()=>selectAns(i);
+    grid.appendChild(btn);
+  });
+
+  // timer
+  const tel=document.getElementById('timer-big');
+  tel.textContent=timePerQ; tel.className='timer-big';
+  const bar=document.getElementById('timer-bar');
+  bar.style.animation='none'; void bar.offsetHeight;
+  bar.style.animationDuration=timePerQ+'s';
+  bar.style.animation=`timerShrink ${timePerQ}s linear forwards`;
+
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    timeLeft--;
+    tel.textContent=timeLeft;
+    if(timeLeft<=5) tel.className='timer-big urgent';
+    if(timeLeft<=0){ clearInterval(timerInt); handleLocalTimeout(); }
+  },1000);
+
+  showScreen('screen-question');
+}
+
+function buildDots(current){
+  const c=document.getElementById('prog-dots');
+  c.innerHTML='';
+  for(let i=0;i<QUESTIONS.length;i++){
+    const d=document.createElement('div');
+    const st=dotStates[i]||'';
+    d.className='pd'+(i<current&&st?' '+st:i===current?' current':'');
+    c.appendChild(d);
+  }
+}
+
+function selectAns(idx){
+  if(answered) return;
+  answered=true;
+  clearInterval(timerInt);
+  const q=QUESTIONS[currentQ];
+  const btns=document.querySelectorAll('.ans-btn');
+  btns.forEach(b=>b.disabled=true);
+
+  if(idx===q.correct){
+    const pts=Math.max(200,Math.round((timeLeft/timePerQ)*1000));
+    myScore+=pts; myCorrect++;
+    btns[idx].classList.add('correct');
+    showFeedback('correct',`✅ נכון! +${pts} נקודות`);
+    dotStates[currentQ]='correct';
+  } else {
+    myWrong++;
+    btns[idx].classList.add('wrong');
+    btns[q.correct].classList.add('reveal');
+    btns.forEach((b,i)=>{ if(i!==idx&&i!==q.correct)b.classList.add('faded'); });
+    showFeedback('wrong',`❌ לא נכון... תשובה נכונה: ${LETTERS[q.correct]}`);
+    dotStates[currentQ]='wrong';
+  }
+  document.getElementById('score-chip').textContent=myScore.toLocaleString();
+  // send to admin
+  ch.postMessage({type:'PLAYER_ANSWER', pid:myId, qi:currentQ, ai:idx, timeLeft});
+  document.getElementById('waiting-next').className='waiting-next show';
+}
+
+function handleLocalTimeout(){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[currentQ];
+  const btns=document.querySelectorAll('.ans-btn');
+  btns.forEach(b=>b.disabled=true);
+  btns[q.correct].classList.add('reveal');
+  btns.forEach((b,i)=>{ if(i!==q.correct)b.classList.add('faded'); });
+  myTimeout++;
+  dotStates[currentQ]='timeout';
+  showFeedback('timeout',`⏰ פג הזמן! תשובה נכונה: ${LETTERS[q.correct]}`);
+  ch.postMessage({type:'PLAYER_ANSWER', pid:myId, qi:currentQ, ai:-1, timeLeft:0});
+  document.getElementById('waiting-next').className='waiting-next show';
+}
+
+function handleQuestionEnd({qi, correctIndex, scores}){
+  clearInterval(timerInt);
+  if(!answered) handleLocalTimeout();
+  lastScores=scores;
+  // show leaderboard after short delay
+  setTimeout(()=>showLeaderboardScreen(qi,scores),1200);
+}
+
+function handleSkip({qi}){
+  clearInterval(timerInt);
+  if(!answered){ myTimeout++; dotStates[currentQ]='timeout'; }
+  answered=true;
+  showScreen('screen-waiting');
+}
+
+/* ============================================================ LEADERBOARD */
+function showLeaderboardScreen(qi, scores){
+  if(!scores) { showScreen('screen-waiting'); return; }
+  document.getElementById('lb-sub').textContent=`אחרי שאלה ${qi+1} מתוך ${QUESTIONS.length}`;
+  const sorted=Object.entries(scores).sort((a,b)=>b[1].score-a[1].score).slice(0,5);
+  const rows=document.getElementById('lb-rows-p');
+  rows.innerHTML='';
+  sorted.forEach(([pid,pd],ri)=>{
+    const isMe=pid===myId;
+    const rankCls=ri===0?'rk1':ri===1?'rk2':ri===2?'rk3':'rkn';
+    const medals=['🥇','🥈','🥉','4','5'];
+    const row=document.createElement('div');
+    row.className='lb-row-p'+(isMe?' lb-me':'');
+    row.style.animationDelay=(ri*0.07)+'s';
+    row.innerHTML=`
+      <div class="lb-rank-badge ${rankCls}">${ri+1}</div>
+      <div class="lb-p-name">${pd.name}${isMe?' 👈':''}</div>
+      <div class="lb-p-pts-gained"></div>
+      <div class="lb-p-score">${pd.score.toLocaleString()}</div>`;
+    rows.appendChild(row);
+  });
+  showScreen('screen-lb');
+}
+
+/* ============================================================ GAME END */
+function handleGameEnd({scores}){
+  clearInterval(timerInt);
+  showFinalScreen(scores);
+}
+
+function showFinalScreen(scores){
+  const pct=myCorrect/QUESTIONS.length;
+  let emoji=pct>=.9?'🥇':pct>=.7?'🥈':pct>=.5?'🥉':'📚';
+  let msg=pct>=.9?'מצוין! שלטת על החומר ברמה הגבוהה ביותר!':
+           pct>=.7?'יפה מאוד! הבנה טובה של עקרונות התחבולה.':
+           pct>=.5?'לא רע! כדאי לחזור על הנושאים שהתקלת בהם.':
+           'כדאי לחזור על החומר. כל שגיאה היא הזדמנות ללמוד!';
+  document.getElementById('final-emoji').textContent=emoji;
+  document.getElementById('final-name').textContent=myName;
+  document.getElementById('final-score').textContent=myScore.toLocaleString();
+  document.getElementById('f-correct').textContent=myCorrect;
+  document.getElementById('f-wrong').textContent=myWrong;
+  document.getElementById('f-timeout').textContent=myTimeout;
+  document.getElementById('final-msg').textContent=msg;
+  showScreen('screen-final');
+  if(pct>=.7) launchConfetti();
+}
+
+function handleReset(){
+  myScore=0; myCorrect=0; myWrong=0; myTimeout=0;
+  currentQ=-1; answered=false; dotStates=[];
+  clearInterval(timerInt);
+  ch.postMessage({type:'PLAYER_JOIN', pid:myId, name:myName});
+  showScreen('screen-waiting');
+}
+
+function rejoin(){ location.reload(); }
+
+function showFeedback(type,msg){
+  const el=document.getElementById('feedback');
+  el.className=`feedback fb-${type} show`;
+  el.textContent=msg;
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function launchConfetti(){
+  const colors=['#e91e63','#f5a623','#1565c0','#00c853','#9c27b0','#ff5252'];
+  for(let i=0;i<70;i++){
+    setTimeout(()=>{
+      const c=document.createElement('div');
+      c.className='confetti-piece';
+      c.style.left=Math.random()*100+'vw';
+      c.style.background=colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration=(Math.random()*2+1.5)+'s';
+      c.style.transform=`rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(c);
+      setTimeout(()=>c.remove(),4000);
+    },i*40);
+  }
+}
+
+// Allow Enter to join
+document.getElementById('inp-name').addEventListener('keydown',e=>{ if(e.key==='Enter')joinGame(); });
+</script>
+</body>
+</html>
